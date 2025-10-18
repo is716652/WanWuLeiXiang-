@@ -34,3 +34,24 @@ export interface BaguaItem {
   basicInfo: string[];
   categories: LeiXiangCategory[];
 }
+
+// 六十甲子纳音数据结构
+export interface NaYinXiangYi {
+  本义: string;
+  性格: string;
+  事业: string;
+  感情: string;
+  健康: string;
+  风水: string;
+  吉色: string | string[];
+  吉数: string | number[];
+  吉方: string | string[];
+}
+
+export interface NaYinItem {
+  name: string;  // 例如 "甲子 乙丑"
+  纳音: string;  // 例如 "海中金"
+  天干: string[];
+  地支: string[];
+  象义: NaYinXiangYi;
+}

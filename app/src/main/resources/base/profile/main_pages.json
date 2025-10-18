@@ -2,6 +2,7 @@
   "src": [
     "pages/Index",
     "pages/BaguaPage",
-    "pages/GanZhiPage"
+    "pages/GanZhiPage",
+    "pages/NaYinPage"
   ]
 }

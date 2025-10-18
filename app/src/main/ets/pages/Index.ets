@@ -90,7 +90,7 @@ struct Index {
 
         // 副标题
         Column({ space: 12 }) {
-          this.createSubtitleItem('八卦 · 天干 · 地支', '☯')
+          this.createSubtitleItem('八卦 · 天干 · 地支 · 纳音', '☯')
           this.createSubtitleItem('易学类象知识库', '📖')
         }
         .opacity(this.subtitleOpacity)
@@ -110,6 +110,13 @@ struct Index {
             '甲乙丙丁  子丑寅卯',
             '#3498DB',
             'pages/GanZhiPage'
+          )
+
+          this.createNavButton(
+            '六十甲子纳音',
+            '海中金  炉中火  大林木',
+            '#9C27B0',
+            'pages/NaYinPage'
           )
         }
         .opacity(this.buttonsOpacity)
