@@ -27,12 +27,31 @@ export interface DiZhiItem {
   specialNotes?: string[];
 }
 
+// 扩展数据文件结构
+export interface ExtendedDataFile {
+  name: string;
+  extendedCategories: ExtendedLeiXiang[];
+}
+
+// 子分类结构
+export interface SubcategoryItem {
+  name: string;        // 子分类名称，如"乾为天", "乾为始"
+  items: string[];     // 具体象义条目
+}
+
+// 八卦扩展象义分组（用于详细类象展示）
+export interface ExtendedLeiXiang {
+  category: string;      // 大分类名称，如"象意", "物体", "建筑物"
+  subcategories: SubcategoryItem[];  // 子分类
+}
+
 // 八卦数据结构
 export interface BaguaItem {
   name: string;
   symbol: string;
   basicInfo: string[];
-  categories: LeiXiangCategory[];
+  categories: LeiXiangCategory[];  // 基础类象（已有）
+  extendedCategories?: ExtendedLeiXiang[];  // 扩展详细类象（新增）
 }
 
 // 六十甲子纳音数据结构

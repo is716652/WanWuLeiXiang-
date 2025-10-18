@@ -1,5 +1,8 @@
 import { router } from '@kit.ArkUI';
 import { loadBaguaData, BaguaItem, LeiXiangCategory } from '../model/BaguaData';
+import { ExtendedLeiXiang, SubcategoryItem, ExtendedDataFile } from '../model/DataTypes';
+import { resourceManager } from '@kit.LocalizationKit';
+import util from '@ohos.util';
 
 @Entry
 @Component
@@ -8,6 +11,9 @@ struct BaguaPage {
   @State selectedBagua: BaguaItem | null = null;
   @State showDetail: boolean = false;
   @State isLoading: boolean = true;
+  @State extendedData: ExtendedLeiXiang[] = [];  // 扩展象义数据
+  @State showExtended: boolean = false;  // 是否显示扩展象义
+  @State expandedCategories: Set<number> = new Set();  // 展开的分类索引
   private scroller: Scroller = new Scroller();
 
   async aboutToAppear() {
@@ -27,12 +33,60 @@ struct BaguaPage {
       // 如果在详情页，返回到列表页
       this.showDetail = false;
       this.selectedBagua = null;
+      this.showExtended = false;  // 重置扩展显示状态
+      this.extendedData = [];  // 清空扩展数据
+      this.expandedCategories.clear();  // 清空展开状态
       console.log('拦截返回，回到八卦列表页');
       return true; // 返回true表示消费了这个返回事件
     }
     // 如果在列表页，返回false让系统处理
     console.log('在八卦列表页，交给系统处理返回');
     return false;
+  }
+
+  // 加载扩展象义数据（按需加载）
+  async loadExtendedData(baguaName: string) {
+    try {
+      const fileName = this.getExtendedFileName(baguaName);
+      const context = getContext(this);
+      const mgr = context.resourceManager;
+      const fileData = await mgr.getRawFileContent(fileName);
+      const textDecoder = util.TextDecoder.create('utf-8');
+      const jsonStr = textDecoder.decodeWithStream(fileData);
+      const data: ExtendedDataFile = JSON.parse(jsonStr) as ExtendedDataFile;
+      this.extendedData = data.extendedCategories || [];
+      this.showExtended = true;
+      console.log(`加载扩展象义成功: ${fileName}`);
+    } catch (error) {
+      console.error(`加载扩展象义失败: ${baguaName}`, error);
+      this.showExtended = false;
+    }
+  }
+
+  // 获取扩展文件名
+  getExtendedFileName(baguaName: string): string {
+    const nameMap = new Map<string, string>([
+      ['乾卦', 'bagua_qian_extended.json'],
+      ['坤卦', 'bagua_kun_extended.json'],
+      ['震卦', 'bagua_zhen_extended.json'],
+      ['巽卦', 'bagua_xun_extended.json'],
+      ['坎卦', 'bagua_kan_extended.json'],
+      ['离卦', 'bagua_li_extended.json'],
+      ['艮卦', 'bagua_gen_extended.json'],
+      ['兑卦', 'bagua_dui_extended.json']
+    ]);
+    return nameMap.get(baguaName) || 'bagua_qian_extended.json';
+  }
+
+  // 切换分类展开状态
+  toggleCategory(index: number) {
+    if (this.expandedCategories.has(index)) {
+      this.expandedCategories.delete(index);
+    } else {
+      this.expandedCategories.add(index);
+    }
+    // 触发界面更新
+    this.expandedCategories = new Set(this.expandedCategories);
   }
 
   build() {
@@ -230,6 +284,67 @@ struct BaguaPage {
         ForEach(this.selectedBagua ? this.selectedBagua.categories : [], (category: LeiXiangCategory) => {
           this.buildCategorySection(category);
         })
+
+        // 查看更多象义按钮
+        if (!this.showExtended) {
+          Button('查看更多象义 ⬇')
+            .width('90%')
+            .height(48)
+            .fontSize(16)
+            .fontColor('#FFFFFF')
+            .backgroundColor('#E74C3C')
+            .borderRadius(24)
+            .onClick(() => {
+              if (this.selectedBagua) {
+                this.loadExtendedData(this.selectedBagua.name);
+              }
+            })
+            .margin({ top: 10 })
+        }
+
+        // 扩展象义分类(折叠展示)
+        if (this.showExtended && this.extendedData.length > 0) {
+          // 标题分割线
+          Row() {
+            Divider()
+              .strokeWidth(1)
+              .color('#E0E0E0')
+              .layoutWeight(1)
+
+            Text('象义分类深入')
+              .fontSize(14)
+              .fontColor('#999')
+              .margin({ left: 12, right: 12 })
+
+            Divider()
+              .strokeWidth(1)
+              .color('#E0E0E0')
+              .layoutWeight(1)
+          }
+          .width('100%')
+          .margin({ top: 16, bottom: 8 })
+
+          // 折叠展示扩展象义
+          ForEach(this.extendedData, (extCategory: ExtendedLeiXiang, catIndex: number) => {
+            this.buildExtendedCategory(extCategory, catIndex);
+          })
+
+          // 收起按钮
+          Button('收起详细象义 ⬆')
+            .width('90%')
+            .height(48)
+            .fontSize(16)
+            .fontColor('#E74C3C')
+            .backgroundColor('#FFF')
+            .border({ width: 2, color: '#E74C3C' })
+            .borderRadius(24)
+            .onClick(() => {
+              this.showExtended = false;
+              this.extendedData = [];
+              this.expandedCategories.clear();
+            })
+            .margin({ top: 16 })
+        }
       }
       .width('100%')
       .padding({ left: 16, right: 16, top: 16, bottom: 24 })
@@ -277,6 +392,91 @@ struct BaguaPage {
         })
       }
       .width('100%')
+    }
+    .width('100%')
+    .padding(16)
+    .backgroundColor('#FFFFFF')
+    .borderRadius(16)
+    .shadow({
+      radius: 8,
+      color: 'rgba(0, 0, 0, 0.06)',
+      offsetX: 0,
+      offsetY: 2
+    })
+  }
+
+  // 扩展分类Builder(支持折叠)
+  @Builder
+  buildExtendedCategory(extCategory: ExtendedLeiXiang, catIndex: number) {
+    Column({ space: 12 }) {
+      // 大分类标题(可点击折叠)
+      Row({ space: 12 }) {
+        Text(this.expandedCategories.has(catIndex) ? '▼' : '▶')
+          .fontSize(14)
+          .fontColor('#E74C3C')
+
+        Text(extCategory.category)
+          .fontSize(18)
+          .fontWeight(700)
+          .fontColor('#E74C3C')
+          .layoutWeight(1)
+
+        Text(this.expandedCategories.has(catIndex) ? '点击收起' : '点击展开')
+          .fontSize(12)
+          .fontColor('#999')
+      }
+      .width('100%')
+      .padding(16)
+      .backgroundColor('#FFF5F5')
+      .borderRadius(12)
+      .onClick(() => {
+        this.toggleCategory(catIndex);
+      })
+
+      // 子分类内容(折叠显示)
+      if (this.expandedCategories.has(catIndex)) {
+        ForEach(extCategory.subcategories, (subcat: SubcategoryItem, subIndex: number) => {
+          Column({ space: 8 }) {
+            // 子分类标题
+            Row({ space: 8 }) {
+              Text('◆')
+                .fontSize(14)
+                .fontColor('#E74C3C')
+
+              Text(subcat.name)
+                .fontSize(16)
+                .fontWeight(600)
+                .fontColor('#2C3E50')
+            }
+            .padding({ top: 8, bottom: 8 })
+
+            // 子分类条目
+            ForEach(subcat.items, (item: string, itemIndex: number) => {
+              Row({ space: 8 }) {
+                Text(`•`)
+                  .fontSize(12)
+                  .fontColor('#95A5A6')
+                  .width(16)
+
+                Text(item)
+                  .fontSize(14)
+                  .fontColor('#34495E')
+                  .layoutWeight(1)
+                  .lineHeight(22)
+              }
+              .width('100%')
+              .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+              .backgroundColor('#F8F9FA')
+              .borderRadius(8)
+            })
+          }
+          .width('100%')
+          .padding(12)
+          .backgroundColor('#FFFFFF')
+          .borderRadius(8)
+          .margin({ top: subIndex === 0 ? 8 : 4 })
+        })
+      }
     }
     .width('100%')
     .padding(16)
