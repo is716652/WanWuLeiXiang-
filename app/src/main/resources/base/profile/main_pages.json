@@ -3,6 +3,7 @@
     "pages/Index",
     "pages/BaguaPage",
     "pages/GanZhiPage",
-    "pages/NaYinPage"
+    "pages/NaYinPage",
+    "pages/LiuShiSiGuaPage"
   ]
 }

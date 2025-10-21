@@ -74,3 +74,42 @@ export interface NaYinItem {
   地支: string[];
   象义: NaYinXiangYi;
 }
+
+// 六十四卦爻辞详解（使用Record类型替代索引签名）
+export type YaoCiDetail = Record<string, string>;
+
+// 爻辞列表项（用于ForEach遍历）
+export interface YaoCiEntry {
+  key: string;
+  value: string;
+}
+
+// 六十四卦详细解释
+export interface GuaDetailExplain {
+  整体含义: string;
+  爻象分析: string;
+  人生启示: string;
+  应用领域: string;
+  吉凶判断: string;
+}
+
+// 六十四卦数据结构
+export interface LiuShiSiGuaItem {
+  卦序: number;
+  卦名: string;
+  卦象: string;  // Unicode卦象符号
+  组成: string;  // 如"乾上乾下"
+  阴阳结构: string;
+  自然象征: string;
+  人伦象征: string;
+  身体象征: string;
+  动物象征: string;
+  五行属性: string;
+  核心象征: string;
+  卦辞: string;
+  彖辞: string;
+  象辞: string;
+  详细解释: GuaDetailExplain;
+  爻辞详解: YaoCiDetail;
+  吉凶等级?: string;  // 如"上上"、"中上"等
+}
