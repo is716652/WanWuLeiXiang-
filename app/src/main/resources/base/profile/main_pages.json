@@ -5,6 +5,7 @@
     "pages/GanZhiPage",
     "pages/NaYinPage",
     "pages/LiuShiSiGuaPage",
-    "pages/GuaShuPage"
+    "pages/GuaShuPage",
+    "pages/JingFangPage"
   ]
 }

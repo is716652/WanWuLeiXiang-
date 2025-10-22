@@ -134,6 +134,13 @@ struct Index {
               '#00BCD4',
               'pages/GuaShuPage'
             )
+
+            this.createNavButton(
+              '京房八宫卦',
+              '世应易学  六爻占卜',
+              '#7B1FA2',
+              'pages/JingFangPage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
