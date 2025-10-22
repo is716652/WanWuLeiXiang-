@@ -141,6 +141,13 @@ struct Index {
               '#7B1FA2',
               'pages/JingFangPage'
             )
+
+            this.createNavButton(
+              '京房重卦法表格',
+              '卦变规律  阴阳消长',
+              '#4A148C',
+              'pages/JingFangTablePage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
