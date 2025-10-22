@@ -75,13 +75,25 @@ export interface NaYinItem {
   象义: NaYinXiangYi;
 }
 
-// 六十四卦爻辞详解（使用Record类型替代索引签名）
+// 六十四卦爻辞详解(使用Record类型替代索引签名)
 export type YaoCiDetail = Record<string, string>;
 
-// 爻辞列表项（用于ForEach遍历）
+// 爻辞列表项(用于ForEach遍历)
 export interface YaoCiEntry {
   key: string;
   value: string;
+}
+
+// 六十四卦卜诀发微
+export interface BuJueFaWei {
+  卜诀诗: string;  // 八句卜诀诗
+  详解: BuJueDetailItem[];  // 每句的详细解释
+}
+
+// 卜诀详解项
+export interface BuJueDetailItem {
+  诗句: string;  // 原诗句
+  解释: string;  // 详细解释内容
 }
 
 // 六十四卦详细解释
@@ -112,4 +124,5 @@ export interface LiuShiSiGuaItem {
   详细解释: GuaDetailExplain;
   爻辞详解: YaoCiDetail;
   吉凶等级?: string;  // 如"上上"、"中上"等
+  卜诀发微?: BuJueFaWei;  // 卜诀发微内容
 }

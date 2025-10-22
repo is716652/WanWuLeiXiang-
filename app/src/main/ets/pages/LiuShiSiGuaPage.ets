@@ -1,6 +1,6 @@
 import { router } from '@kit.ArkUI';
 import { loadLiuShiSiGuaSummary, loadSingleGua } from '../model/LiuShiSiGuaData';
-import { LiuShiSiGuaItem, YaoCiEntry } from '../model/DataTypes';
+import { LiuShiSiGuaItem, YaoCiEntry, BuJueDetailItem } from '../model/DataTypes';
 
 @Entry
 @Component
@@ -216,6 +216,9 @@ struct LiuShiSiGuaPage {
           // 详细解释
           this.buildDetailExplain();
 
+          // 卜诀发微
+          this.buildBuJueFaWei();
+
           // 爻辞详解
           this.buildYaoCiDetail();
         }
@@ -393,6 +396,82 @@ struct LiuShiSiGuaPage {
         .padding({ left: 16 })
     }
     .width('100%')
+    .alignItems(HorizontalAlign.Start)
+  }
+
+  @Builder
+  buildBuJueFaWei() {
+    if (this.selectedGua && this.selectedGua.卜诀发微) {
+      Column({ space: 12 }) {
+        Text('卜诀发微')
+          .fontSize(18)
+          .fontWeight(700)
+          .fontColor('#9C27B0')
+          .margin({ bottom: 8 })
+
+        // 卜诀诗
+        Column({ space: 8 }) {
+          Text('卜诀诗')
+            .fontSize(15)
+            .fontWeight(600)
+            .fontColor('#7F8C8D')
+
+          Text(this.selectedGua.卜诀发微.卜诀诗)
+            .fontSize(14)
+            .fontColor('#34495E')
+            .lineHeight(24)
+            .padding(12)
+            .width('100%')
+            .backgroundColor('#F3E5F5')
+            .borderRadius(8)
+        }
+        .width('100%')
+        .alignItems(HorizontalAlign.Start)
+
+        // 详细解释
+        ForEach(this.selectedGua.卜诀发微.详解, (item: BuJueDetailItem) => {
+          this.buildBuJueDetailItem(item.诗句, item.解释);
+        })
+      }
+      .width('100%')
+      .padding(20)
+      .backgroundColor('#FFFFFF')
+      .borderRadius(16)
+      .shadow({
+        radius: 8,
+        color: 'rgba(156, 39, 176, 0.1)',
+        offsetX: 0,
+        offsetY: 2
+      })
+    }
+  }
+
+  @Builder
+  buildBuJueDetailItem(shiJu: string, jieShi: string) {
+    Column({ space: 8 }) {
+      Row({ space: 8 }) {
+        Text('◆')
+          .fontSize(14)
+          .fontColor('#9C27B0')
+
+        Text(shiJu)
+          .fontSize(14)
+          .fontWeight(600)
+          .fontColor('#2C3E50')
+          .layoutWeight(1)
+      }
+      .width('100%')
+
+      Text(jieShi)
+        .fontSize(13)
+        .fontColor('#7F8C8D')
+        .lineHeight(22)
+        .padding({ left: 22 })
+    }
+    .width('100%')
+    .padding(12)
+    .backgroundColor('#FAFAFA')
+    .borderRadius(8)
     .alignItems(HorizontalAlign.Start)
   }
 
