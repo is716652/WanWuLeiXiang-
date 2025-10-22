@@ -4,6 +4,7 @@
     "pages/BaguaPage",
     "pages/GanZhiPage",
     "pages/NaYinPage",
-    "pages/LiuShiSiGuaPage"
+    "pages/LiuShiSiGuaPage",
+    "pages/GuaShuPage"
   ]
 }

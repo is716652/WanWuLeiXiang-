@@ -127,6 +127,13 @@ struct Index {
               '#F39C12',
               'pages/LiuShiSiGuaPage'
             )
+
+            this.createNavButton(
+              '六十四卦卦数图',
+              '象数合一  先天卦数',
+              '#00BCD4',
+              'pages/GuaShuPage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
