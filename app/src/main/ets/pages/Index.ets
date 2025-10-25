@@ -148,6 +148,13 @@ struct Index {
               '#4A148C',
               'pages/JingFangTablePage'
             )
+
+            this.createNavButton(
+              '纳甲配置表',
+              '六爻基础  天干地支配卦',
+              '#2E7D32',
+              'pages/NaJiaPage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })

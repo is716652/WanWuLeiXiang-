@@ -24,8 +24,8 @@
 | 类别 | 已完成 | 总数 | 完成度 | 状态 |
 |------|--------|------|--------|------|
 | **JSON数据文件** | 132 | 132 | 100% | ✅ 完成 |
-| **功能页面** | 8 | 8 | 100% | ✅ 完成 |
-| **数据模型** | 7 | 7 | 100% | ✅ 完成 |
+| **功能页面** | 9 | 9 | 100% | ✅ 完成 |
+| **数据模型** | 8 | 8 | 100% | ✅ 完成 |
 | **编译状态** | - | - | - | ✅ 成功 |
 
 ### 数据文件详细统计
@@ -57,15 +57,17 @@ AnalogicalCategorizationAllThings/
 │   │   │   ├── LiuShiSiGuaPage.ets          # 六十四卦详解
 │   │   │   ├── GuaShuPage.ets               # 六十四卦卦数图表
 │   │   │   ├── JingFangPage.ets             # 京房八宫卦（卡片版）
-│   │   │   └── JingFangTablePage.ets        # 京房重卦法表格
-│   │   └── model/              # 7个数据模型
+│   │   │   ├── JingFangTablePage.ets        # 京房重卦法表格
+│   │   │   └── NaJiaPage.ets                # 纳甲配置表
+│   │   └── model/              # 8个数据模型
 │   │       ├── DataTypes.ets                # 类型定义
 │   │       ├── GanZhiData.ets               # 天干地支加载器
 │   │       ├── BaguaData.ets                # 八卦数据加载器
 │   │       ├── LiuShiSiGuaData.ets          # 六十四卦加载器
 │   │       ├── NaYinData.ets                # 纳音数据加载器
 │   │       ├── JingFangData.ets             # 京房八宫卦（内置）
-│   │       └── GuaShuData.ets               # 卦数图表（内置）
+│   │       ├── GuaShuData.ets               # 卦数图表（内置）
+│   │       └── NaJiaData.ets                # 纳甲配置（内置）
 │   └── resources/rawfile/      # 132个JSON数据文件
 │       ├── tiangan_*.json      (10个)
 │       ├── dizhi_*.json        (12个)
@@ -90,7 +92,7 @@ AnalogicalCategorizationAllThings/
 
 ## 💻 核心技术
 
-### 1. 数据模型（7个）
+### 1. 数据模型（8个）
 
 #### DataTypes.ets - 统一类型定义
 ```typescript
@@ -150,6 +152,11 @@ export interface LeiXiangCategory {
 #### GuaShuData.ets - 卦数图表（内置数据）
 - 64卦的先天八卦数数据
 - 上卦数、下卦数配置
+
+#### NaJiaData.ets - 纳甲配置（内置数据）
+- 八卦纳甲完整规则数据
+- 天干地支配置、五行属性
+- 记忆口诀、颜色配置函数
 
 ### 2. 异步数据加载机制
 ```typescript
@@ -212,7 +219,12 @@ async aboutToAppear() {
 - **数据**：内置数据
 - **特点**：清晰对比，学习规律
 
-### 8. 首页封面 (Index.ets)
+### 8. 纳甲配置表 (NaJiaPage.ets)
+- **功能**：六爻占卜基础，八卦纳甲规则
+- **数据**：内置数据（8个八卦完整配置）
+- **特点**：点击展开，五行配色，记忆口诀
+
+### 9. 首页封面 (Index.ets)
 - **功能**：导航入口
 - **特点**：精美动画，主题配色
 
@@ -500,7 +512,8 @@ app/src/main/resources/rawfile/
     "pages/LiuShiSiGuaPage",
     "pages/GuaShuPage",
     "pages/JingFangPage",
-    "pages/JingFangTablePage"
+    "pages/JingFangTablePage",
+    "pages/NaJiaPage"
   ]
 }
 ```

@@ -7,6 +7,7 @@
     "pages/LiuShiSiGuaPage",
     "pages/GuaShuPage",
     "pages/JingFangPage",
-    "pages/JingFangTablePage"
+    "pages/JingFangTablePage",
+    "pages/NaJiaPage"
   ]
 }
