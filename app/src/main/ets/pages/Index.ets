@@ -136,31 +136,10 @@ struct Index {
             )
 
             this.createNavButton(
-              '京房八宫卦',
-              '世应易学  六爻占卜',
+              '汉代象数易学',
+              '京房易学  纳甲卦气  世应占卜',
               '#7B1FA2',
-              'pages/JingFangPage'
-            )
-
-            this.createNavButton(
-              '京房重卦法表格',
-              '卦变规律  阴阳消长',
-              '#4A148C',
-              'pages/JingFangTablePage'
-            )
-
-            this.createNavButton(
-              '纳甲配置表',
-              '六爻基础  天干地支配卦',
-              '#2E7D32',
-              'pages/NaJiaPage'
-            )
-
-            this.createNavButton(
-              '卦气值日',
-              '六日七分  冬至起始六十卦轮值',
-              '#8E24AA',
-              'pages/GuaQiPage'
+              'pages/HanDaiPage'
             )
           }
           .opacity(this.buttonsOpacity)

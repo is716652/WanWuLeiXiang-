@@ -24,7 +24,7 @@
 | 类别 | 已完成 | 总数 | 完成度 | 状态 |
 |------|--------|------|--------|------|
 | **JSON数据文件** | 132 | 132 | 100% | ✅ 完成 |
-| **功能页面** | 10 | 10 | 100% | ✅ 完成 |
+| **功能页面** | 11 | 11 | 100% | ✅ 完成 |
 | **数据模型** | 9 | 9 | 100% | ✅ 完成 |
 | **编译状态** | - | - | - | ✅ 成功 |
 
@@ -56,6 +56,7 @@ AnalogicalCategorizationAllThings/
 │   │   │   ├── NaYinPage.ets                # 六十甲子纳音
 │   │   │   ├── LiuShiSiGuaPage.ets          # 六十四卦详解
 │   │   │   ├── GuaShuPage.ets               # 六十四卦卦数图表
+│   │   │   ├── HanDaiPage.ets               # 汉代象数易学（导航页）
 │   │   │   ├── JingFangPage.ets             # 京房八宫卦（卡片版）
 │   │   │   ├── JingFangTablePage.ets        # 京房重卦法表格
 │   │   │   ├── NaJiaPage.ets                # 纳甲配置表
@@ -226,17 +227,22 @@ async aboutToAppear() {
 - **数据**：内置数据
 - **特点**：清晰对比，学习规律
 
-### 8. 纳甲配置表 (NaJiaPage.ets)
+### 8. 汉代象数易学 (HanDaiPage.ets)
+- **功能**：京房易学体系导航页
+- **数据**：整合四大子功能模块
+- **特点**：紫色主题，层次导航，功能说明
+
+### 9. 纳甲配置表 (NaJiaPage.ets)
 - **功能**：六爻占卜基础，八卦纳甲规则
 - **数据**：内置数据（8个八卦完整配置）
 - **特点**：点击展开，五行配色，记忆口诀
 
-### 9. 卦气值日 (GuaQiPage.ets)
+### 10. 卦气值日 (GuaQiPage.ets)
 - **功能**：京房卦气理论，六十卦轮值系统
 - **数据**：内置数据（60卦完整值日表）
 - **特点**：年份选择，冬至起始，六日七分规则
 
-### 10. 首页封面 (Index.ets)
+### 11. 首页封面 (Index.ets)
 - **功能**：导航入口
 - **特点**：精美动画，主题配色
 
@@ -523,6 +529,7 @@ app/src/main/resources/rawfile/
     "pages/NaYinPage",
     "pages/LiuShiSiGuaPage",
     "pages/GuaShuPage",
+    "pages/HanDaiPage",
     "pages/JingFangPage",
     "pages/JingFangTablePage",
     "pages/NaJiaPage",
