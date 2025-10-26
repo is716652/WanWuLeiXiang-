@@ -8,6 +8,7 @@
     "pages/GuaShuPage",
     "pages/JingFangPage",
     "pages/JingFangTablePage",
-    "pages/NaJiaPage"
+    "pages/NaJiaPage",
+    "pages/GuaQiPage"
   ]
 }

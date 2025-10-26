@@ -24,8 +24,8 @@
 | 类别 | 已完成 | 总数 | 完成度 | 状态 |
 |------|--------|------|--------|------|
 | **JSON数据文件** | 132 | 132 | 100% | ✅ 完成 |
-| **功能页面** | 9 | 9 | 100% | ✅ 完成 |
-| **数据模型** | 8 | 8 | 100% | ✅ 完成 |
+| **功能页面** | 10 | 10 | 100% | ✅ 完成 |
+| **数据模型** | 9 | 9 | 100% | ✅ 完成 |
 | **编译状态** | - | - | - | ✅ 成功 |
 
 ### 数据文件详细统计
@@ -58,8 +58,9 @@ AnalogicalCategorizationAllThings/
 │   │   │   ├── GuaShuPage.ets               # 六十四卦卦数图表
 │   │   │   ├── JingFangPage.ets             # 京房八宫卦（卡片版）
 │   │   │   ├── JingFangTablePage.ets        # 京房重卦法表格
-│   │   │   └── NaJiaPage.ets                # 纳甲配置表
-│   │   └── model/              # 8个数据模型
+│   │   │   ├── NaJiaPage.ets                # 纳甲配置表
+│   │   │   └── GuaQiPage.ets                # 卦气值日表
+│   │   └── model/              # 9个数据模型
 │   │       ├── DataTypes.ets                # 类型定义
 │   │       ├── GanZhiData.ets               # 天干地支加载器
 │   │       ├── BaguaData.ets                # 八卦数据加载器
@@ -67,7 +68,8 @@ AnalogicalCategorizationAllThings/
 │   │       ├── NaYinData.ets                # 纳音数据加载器
 │   │       ├── JingFangData.ets             # 京房八宫卦（内置）
 │   │       ├── GuaShuData.ets               # 卦数图表（内置）
-│   │       └── NaJiaData.ets                # 纳甲配置（内置）
+│   │       ├── NaJiaData.ets                # 纳甲配置（内置）
+│   │       └── GuaQiData.ets                # 卦气值日（内置）
 │   └── resources/rawfile/      # 132个JSON数据文件
 │       ├── tiangan_*.json      (10个)
 │       ├── dizhi_*.json        (12个)
@@ -92,7 +94,7 @@ AnalogicalCategorizationAllThings/
 
 ## 💻 核心技术
 
-### 1. 数据模型（8个）
+### 1. 数据模型（9个）
 
 #### DataTypes.ets - 统一类型定义
 ```typescript
@@ -157,6 +159,11 @@ export interface LeiXiangCategory {
 - 八卦纳甲完整规则数据
 - 天干地支配置、五行属性
 - 记忆口诀、颜色配置函数
+
+#### GuaQiData.ets - 卦气值日（内置数据）
+- 六十卦轮值顺序和时间计算
+- 基于"六日七分"规则的算法
+- 卦气特征描述、五行配色函数
 
 ### 2. 异步数据加载机制
 ```typescript
@@ -224,7 +231,12 @@ async aboutToAppear() {
 - **数据**：内置数据（8个八卦完整配置）
 - **特点**：点击展开，五行配色，记忆口诀
 
-### 9. 首页封面 (Index.ets)
+### 9. 卦气值日 (GuaQiPage.ets)
+- **功能**：京房卦气理论，六十卦轮值系统
+- **数据**：内置数据（60卦完整值日表）
+- **特点**：年份选择，冬至起始，六日七分规则
+
+### 10. 首页封面 (Index.ets)
 - **功能**：导航入口
 - **特点**：精美动画，主题配色
 
@@ -513,7 +525,8 @@ app/src/main/resources/rawfile/
     "pages/GuaShuPage",
     "pages/JingFangPage",
     "pages/JingFangTablePage",
-    "pages/NaJiaPage"
+    "pages/NaJiaPage",
+    "pages/GuaQiPage"
   ]
 }
 ```

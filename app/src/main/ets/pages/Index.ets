@@ -155,6 +155,13 @@ struct Index {
               '#2E7D32',
               'pages/NaJiaPage'
             )
+
+            this.createNavButton(
+              '卦气值日',
+              '六日七分  冬至起始六十卦轮值',
+              '#8E24AA',
+              'pages/GuaQiPage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
