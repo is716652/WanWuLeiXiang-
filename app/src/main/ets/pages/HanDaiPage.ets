@@ -88,108 +88,126 @@ struct HanDaiPage {
       .padding({ left: 16, right: 16 })
       .backgroundColor('#FFFFFF')
 
-      // 内容区域
-      Column({ space: 20 }) {
-        // 页面说明
-        Column({ space: 8 }) {
-          Text('汉代象数易学体系')
-            .fontSize(24)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#333333')
-            .textAlign(TextAlign.Center)
+      // 可滚动的内容区域
+      Scroll() {
+        Column({ space: 20 }) {
+          // 页面说明
+          Column({ space: 8 }) {
+            Text('汉代象数易学体系')
+              .fontSize(24)
+              .fontWeight(FontWeight.Bold)
+              .fontColor('#333333')
+              .textAlign(TextAlign.Center)
 
-          Text('京房易学传承，象数理论精华')
-            .fontSize(14)
-            .fontColor('#666666')
-            .textAlign(TextAlign.Center)
+            Text('京房易学传承，象数理论精华')
+              .fontSize(14)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Center)
 
-          Text('包含八宫卦序、纳甲配置、卦气值日等核心内容')
-            .fontSize(12)
-            .fontColor('#999999')
-            .textAlign(TextAlign.Center)
-            .margin({ top: 8 })
+            Text('包含焦氏易林起卦、八宫卦序、纳甲配置、卦气值日等核心内容')
+              .fontSize(12)
+              .fontColor('#999999')
+              .textAlign(TextAlign.Center)
+              .margin({ top: 8 })
+          }
+          .width('100%')
+          .padding(20)
+
+          // 功能按钮区域
+          Column({ space: 16 }) {
+            // 第一行：焦氏易林起卦
+            this.createNavButton(
+              '焦氏易林起卦',
+              '六爻同时生成法  本卦之卦占验',
+              '#3F51B5',
+              'pages/QiGuaPage'
+            )
+
+            // 第二行：京房八宫卦
+            this.createNavButton(
+              '京房八宫卦',
+              '世应易学  六爻占卜基础',
+              '#4A148C',
+              'pages/JingFangPage'
+            )
+
+            // 第三行：京房重卦法表格
+            this.createNavButton(
+              '京房重卦法表格',
+              '卦变规律  阴阳消长',
+              '#6A1B9A',
+              'pages/JingFangTablePage'
+            )
+
+            // 第四行：纳甲配置表
+            this.createNavButton(
+              '纳甲配置表',
+              '六爻基础  天干地支配卦',
+              '#7B1FA2',
+              'pages/NaJiaPage'
+            )
+
+            // 第五行：卦气值日
+            this.createNavButton(
+              '卦气值日',
+              '六日七分  冬至起始六十卦轮值',
+              '#8E24AA',
+              'pages/GuaQiPage'
+            )
+          }
+          .width('100%')
+          .padding({ left: 20, right: 20 })
+          .opacity(this.buttonsOpacity)
+
+          // 底部说明
+          Column({ space: 8 }) {
+            Text('汉代象数易学特色')
+              .fontSize(16)
+              .fontWeight(FontWeight.Bold)
+              .fontColor('#333333')
+
+            Text('• 焦氏易林起卦：六爻同时生成法，本卦之卦占验')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+
+            Text('• 京房八宫卦序：世应理论，六爻占卜核心')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+
+            Text('• 纳甲配置：天干地支与八卦的对应关系')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+
+            Text('• 卦气值日：基于"六日七分"的时间易学')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+
+            Text('• 重卦法表：卦变规律的系统化展示')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+          }
+          .width('100%')
+          .padding(20)
+          .backgroundColor('#F8F9FA')
+          .borderRadius(12)
+          .margin({ top: 20 })
         }
         .width('100%')
-        .padding(20)
-
-        // 功能按钮区域
-        Column({ space: 16 }) {
-          // 第一行：京房八宫卦
-          this.createNavButton(
-            '京房八宫卦',
-            '世应易学  六爻占卜基础',
-            '#4A148C',
-            'pages/JingFangPage'
-          )
-
-          // 第二行：京房重卦法表格
-          this.createNavButton(
-            '京房重卦法表格',
-            '卦变规律  阴阳消长',
-            '#6A1B9A',
-            'pages/JingFangTablePage'
-          )
-
-          // 第三行：纳甲配置表
-          this.createNavButton(
-            '纳甲配置表',
-            '六爻基础  天干地支配卦',
-            '#7B1FA2',
-            'pages/NaJiaPage'
-          )
-
-          // 第四行：卦气值日
-          this.createNavButton(
-            '卦气值日',
-            '六日七分  冬至起始六十卦轮值',
-            '#8E24AA',
-            'pages/GuaQiPage'
-          )
-        }
-        .width('100%')
-        .padding({ left: 20, right: 20 })
-        .opacity(this.buttonsOpacity)
-
-        // 底部说明
-        Column({ space: 8 }) {
-          Text('汉代象数易学特色')
-            .fontSize(16)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#333333')
-
-          Text('• 京房八宫卦序：世应理论，六爻占卜核心')
-            .fontSize(12)
-            .fontColor('#666666')
-            .textAlign(TextAlign.Start)
-            .width('100%')
-
-          Text('• 纳甲配置：天干地支与八卦的对应关系')
-            .fontSize(12)
-            .fontColor('#666666')
-            .textAlign(TextAlign.Start)
-            .width('100%')
-
-          Text('• 卦气值日：基于"六日七分"的时间易学')
-            .fontSize(12)
-            .fontColor('#666666')
-            .textAlign(TextAlign.Start)
-            .width('100%')
-
-          Text('• 重卦法表：卦变规律的系统化展示')
-            .fontSize(12)
-            .fontColor('#666666')
-            .textAlign(TextAlign.Start)
-            .width('100%')
-        }
-        .width('100%')
-        .padding(20)
-        .backgroundColor('#F8F9FA')
-        .borderRadius(12)
-        .margin({ top: 20 })
+        .padding({ top: 20, bottom: 20 })
       }
-      .width('100%')
       .layoutWeight(1)
-      .padding({ top: 20, bottom: 20 })
+      .scrollable(ScrollDirection.Vertical)
+      .scrollBar(BarState.Auto)
     }
     .width('100%')
     .height('100%')
