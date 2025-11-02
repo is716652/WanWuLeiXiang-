@@ -154,6 +154,14 @@ struct HanDaiPage {
               '#8E24AA',
               'pages/GuaQiPage'
             )
+
+            // 第六行：焦氏易林查询
+            this.createNavButton(
+              '焦氏易林查询',
+              '浏览查询  已收录12卦易林内容',
+              '#9C27B0',
+              'pages/JiaoshiYilinPage'
+            )
           }
           .width('100%')
           .padding({ left: 20, right: 20 })
@@ -191,6 +199,12 @@ struct HanDaiPage {
               .width('100%')
 
             Text('• 重卦法表：卦变规律的系统化展示')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+
+            Text('• 焦氏易林查询：已收录12卦完整易林内容')
               .fontSize(12)
               .fontColor('#666666')
               .textAlign(TextAlign.Start)

@@ -11,6 +11,7 @@
     "pages/JingFangPage",
     "pages/JingFangTablePage",
     "pages/NaJiaPage",
-    "pages/GuaQiPage"
+    "pages/GuaQiPage",
+    "pages/JiaoshiYilinPage"
   ]
 }

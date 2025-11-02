@@ -4,6 +4,7 @@
  */
 
 import { QiGuaResult, GuaInfo, YaoInfo, performQiGua, getYaoColor, getGuaColor } from '../model/JiaoShiQiGuaData';
+import { JieGuaResult, performJieGua, getGuaCombinationExplanation } from '../model/JiaoshiYilinService';
 import router from '@ohos.router';
 
 @Entry
@@ -14,6 +15,9 @@ struct QiGuaPage {
   @State showResult: boolean = false;
   @State question: string = '';
   @State showQuestionInput: boolean = false;
+  @State jieGuaResult: JieGuaResult | null = null;
+  @State showJieGua: boolean = false;
+  @State isLoadingJieGua: boolean = false;
 
   /**
    * 爻位显示组件
@@ -166,6 +170,238 @@ struct QiGuaPage {
         this.showResult = true;
       }, 300);
     }, 1500);
+  }
+
+  /**
+   * 执行解卦
+   */
+  async performJieGuaAction() {
+    if (!this.qiGuaResult) return;
+    
+    this.isLoadingJieGua = true;
+    
+    try {
+      const benGuaName = this.qiGuaResult.benGua.name;
+      const zhiGuaName = this.qiGuaResult.changingYaoCount > 0 ? this.qiGuaResult.zhiGua.name : undefined;
+      
+      const result = await performJieGua(benGuaName, zhiGuaName);
+      this.jieGuaResult = result;
+      this.showJieGua = true;
+    } catch (error) {
+      console.error('解卦失败:', error);
+    } finally {
+      this.isLoadingJieGua = false;
+    }
+  }
+
+  /**
+   * 解卦结果显示
+   */
+  @Builder
+  JieGuaResultDialog() {
+    if (this.jieGuaResult) {
+      Column({ space: 20 }) {
+        // 标题
+        Row() {
+          Text(this.jieGuaResult.message)
+            .fontSize(18)
+            .fontWeight(FontWeight.Bold)
+            .fontColor('#333333')
+            .layoutWeight(1)
+
+          Button('×')
+            .fontSize(20)
+            .fontColor('#666666')
+            .backgroundColor(Color.Transparent)
+            .onClick(() => {
+              this.showJieGua = false;
+            })
+        }
+        .width('100%')
+
+        if (this.jieGuaResult.isAvailable && this.jieGuaResult.benGuaInfo) {
+          Scroll() {
+            Column({ space: 16 }) {
+              // 卦象组合说明
+              if (this.qiGuaResult) {
+                Column({ space: 8 }) {
+                  Text('卦象组合')
+                    .fontSize(16)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#8E24AA')
+
+                  Text(getGuaCombinationExplanation(
+                    this.qiGuaResult.benGua.name,
+                    this.qiGuaResult.changingYaoCount > 0 ? this.qiGuaResult.zhiGua.name : undefined
+                  ))
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .lineHeight(18)
+                }
+                .width('100%')
+                .padding(12)
+                .backgroundColor('#F0F8FF')
+                .borderRadius(8)
+              }
+
+              // 本卦解释
+              Column({ space: 12 }) {
+                Text(`${this.jieGuaResult.benGuaInfo.guaInfo.guaName}卦 - 本卦`)
+                  .fontSize(16)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor('#8E24AA')
+
+                Column({ space: 8 }) {
+                  Text('原文：')
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#333333')
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+
+                  Text(this.jieGuaResult.benGuaInfo.benGua.text)
+                    .fontSize(14)
+                    .fontColor('#333333')
+                    .lineHeight(22)
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+                }
+
+                Column({ space: 8 }) {
+                  Text('义译：')
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#666666')
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+
+                  Text(this.jieGuaResult.benGuaInfo.benGua.yiyi)
+                    .fontSize(14)
+                    .fontColor('#666666')
+                    .lineHeight(22)
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+                }
+
+                Column({ space: 8 }) {
+                  Text('象证：')
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#999999')
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+
+                  Text(this.jieGuaResult.benGuaInfo.benGua.xiangzheng)
+                    .fontSize(12)
+                    .fontColor('#999999')
+                    .lineHeight(20)
+                    .width('100%')
+                    .textAlign(TextAlign.Start)
+                }
+              }
+              .width('100%')
+              .padding(16)
+              .backgroundColor('#F8F9FA')
+              .borderRadius(8)
+
+              // 之卦解释（如果有）
+              if (this.jieGuaResult.zhiGuaInfo) {
+                Column({ space: 12 }) {
+                  Text(`${this.jieGuaResult.zhiGuaInfo.targetGua}卦 - 之卦`)
+                    .fontSize(16)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#FF6B35')
+
+                  Column({ space: 8 }) {
+                    Text('原文：')
+                      .fontSize(14)
+                      .fontWeight(FontWeight.Bold)
+                      .fontColor('#333333')
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+
+                    Text(this.jieGuaResult.zhiGuaInfo.text)
+                      .fontSize(14)
+                      .fontColor('#333333')
+                      .lineHeight(22)
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+                  }
+
+                  Column({ space: 8 }) {
+                    Text('义译：')
+                      .fontSize(14)
+                      .fontWeight(FontWeight.Bold)
+                      .fontColor('#666666')
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+
+                    Text(this.jieGuaResult.zhiGuaInfo.yiyi)
+                      .fontSize(14)
+                      .fontColor('#666666')
+                      .lineHeight(22)
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+                  }
+
+                  Column({ space: 8 }) {
+                    Text('象证：')
+                      .fontSize(14)
+                      .fontWeight(FontWeight.Bold)
+                      .fontColor('#999999')
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+
+                    Text(this.jieGuaResult.zhiGuaInfo.xiangzheng)
+                      .fontSize(12)
+                      .fontColor('#999999')
+                      .lineHeight(20)
+                      .width('100%')
+                      .textAlign(TextAlign.Start)
+                  }
+                }
+                .width('100%')
+                .padding(16)
+                .backgroundColor('#FFF3E0')
+                .borderRadius(8)
+              }
+            }
+          }
+          .height(400)
+          .scrollBar(BarState.Auto)
+        } else {
+          // 卦象暂未收录的提示
+          Column({ space: 16 }) {
+            Text('📚')
+              .fontSize(48)
+
+            Text(this.jieGuaResult.message)
+              .fontSize(14)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Center)
+              .lineHeight(22)
+
+            Button('查看已收录卦象')
+              .fontSize(14)
+              .fontColor('#FFFFFF')
+              .backgroundColor('#8E24AA')
+              .onClick(() => {
+                this.showJieGua = false;
+                router.pushUrl({
+                  url: 'pages/JiaoshiYilinPage'
+                });
+              })
+          }
+          .width('100%')
+          .height(300)
+          .justifyContent(FlexAlign.Center)
+        }
+      }
+      .padding(20)
+      .backgroundColor('#FFFFFF')
+      .borderRadius(12)
+      .width('95%')
+    }
   }
 
   /**
@@ -484,14 +720,14 @@ struct QiGuaPage {
                   this.question = '';
                 })
               
-              Button('查看易林')
+              Button(this.isLoadingJieGua ? '解卦中...' : '查看易林')
                 .fontSize(16)
                 .fontColor('#FFFFFF')
-                .backgroundColor('#FF6B35')
+                .backgroundColor(this.isLoadingJieGua ? '#CCCCCC' : '#FF6B35')
                 .layoutWeight(1)
+                .enabled(!this.isLoadingJieGua)
                 .onClick(() => {
-                  // TODO: 跳转到焦氏易林查询页面
-                  console.log('查看易林功能待实现');
+                  this.performJieGuaAction();
                 })
             }
             .width('100%')
@@ -509,6 +745,11 @@ struct QiGuaPage {
     .backgroundColor('#F5F5F5')
     .bindSheet($$this.showQuestionInput, this.QuestionInputDialog(), {
       height: 300,
+      dragBar: false,
+      backgroundColor: Color.Transparent
+    })
+    .bindSheet($$this.showJieGua, this.JieGuaResultDialog(), {
+      height: '80%',
       dragBar: false,
       backgroundColor: Color.Transparent
     })
