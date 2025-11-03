@@ -105,6 +105,11 @@ struct QiGuaPage {
             .fontSize(12)
             .fontColor('#666666')
           
+          Text(`数字卦：${gua.code}`)
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor('#8E24AA')
+          
           Text(`${gua.upperGua}上${gua.lowerGua}下`)
             .fontSize(12)
             .fontColor('#999999')
@@ -168,6 +173,8 @@ struct QiGuaPage {
       // 再延迟一点显示完整结果
       setTimeout(() => {
         this.showResult = true;
+        // 自动执行解卦
+        this.performJieGuaAction();
       }, 300);
     }, 1500);
   }
@@ -684,23 +691,51 @@ struct QiGuaPage {
                 .fontColor('#333333')
               
               if (this.qiGuaResult.changingYaoCount > 0) {
-                Text(`${this.qiGuaResult.benGua.name}之${this.qiGuaResult.zhiGua.name}`)
-                  .fontSize(20)
-                  .fontWeight(FontWeight.Bold)
-                  .fontColor('#8E24AA')
-                  .textAlign(TextAlign.Center)
+                Column({ space: 8 }) {
+                  Text(`${this.qiGuaResult.benGua.name}之${this.qiGuaResult.zhiGua.name}`)
+                    .fontSize(20)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#8E24AA')
+                    .textAlign(TextAlign.Center)
+                  
+                  Text(`数字卦：${this.qiGuaResult.benGua.code} → ${this.qiGuaResult.zhiGua.code}`)
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Medium)
+                    .fontColor('#FF6B35')
+                    .textAlign(TextAlign.Center)
+                }
               } else {
-                Text(`${this.qiGuaResult.benGua.name}卦`)
-                  .fontSize(20)
-                  .fontWeight(FontWeight.Bold)
-                  .fontColor('#8E24AA')
-                  .textAlign(TextAlign.Center)
+                Column({ space: 8 }) {
+                  Text(`${this.qiGuaResult.benGua.name}卦`)
+                    .fontSize(20)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#8E24AA')
+                    .textAlign(TextAlign.Center)
+                  
+                  Text(`数字卦：${this.qiGuaResult.benGua.code}`)
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Medium)
+                    .fontColor('#8E24AA')
+                    .textAlign(TextAlign.Center)
+                }
               }
               
-              Text('可用此卦象组合查询《焦氏易林》获得详细解释')
-                .fontSize(12)
-                .fontColor('#999999')
-                .textAlign(TextAlign.Center)
+              if (this.isLoadingJieGua) {
+                Text('正在自动查询《焦氏易林》...')
+                  .fontSize(12)
+                  .fontColor('#FF6B35')
+                  .textAlign(TextAlign.Center)
+              } else if (this.jieGuaResult) {
+                Text('已自动查询《焦氏易林》获得详细解释')
+                  .fontSize(12)
+                  .fontColor('#4CAF50')
+                  .textAlign(TextAlign.Center)
+              } else {
+                Text('点击"重新解卦"查询《焦氏易林》')
+                  .fontSize(12)
+                  .fontColor('#999999')
+                  .textAlign(TextAlign.Center)
+              }
             }
             .width('100%')
             .padding(16)
@@ -718,16 +753,22 @@ struct QiGuaPage {
                   this.qiGuaResult = null;
                   this.showResult = false;
                   this.question = '';
+                  this.jieGuaResult = null;
+                  this.showJieGua = false;
                 })
               
-              Button(this.isLoadingJieGua ? '解卦中...' : '查看易林')
+              Button(this.jieGuaResult ? '查看解卦' : (this.isLoadingJieGua ? '解卦中...' : '重新解卦'))
                 .fontSize(16)
                 .fontColor('#FFFFFF')
                 .backgroundColor(this.isLoadingJieGua ? '#CCCCCC' : '#FF6B35')
                 .layoutWeight(1)
                 .enabled(!this.isLoadingJieGua)
                 .onClick(() => {
-                  this.performJieGuaAction();
+                  if (this.jieGuaResult) {
+                    this.showJieGua = true;
+                  } else {
+                    this.performJieGuaAction();
+                  }
                 })
             }
             .width('100%')
