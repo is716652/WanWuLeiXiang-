@@ -193,9 +193,140 @@ function getGuaData(code: number): GuaBaseData | null {
     case 20: 
       result = { name: '观', symbol: '䷓', upper: '巽', lower: '坤' };
       break;
-    // 简化处理，只实现前20卦，其他使用默认值
+    case 21: 
+      result = { name: '噬嗑', symbol: '䷔', upper: '离', lower: '震' };
+      break;
+    case 22: 
+      result = { name: '贲', symbol: '䷕', upper: '艮', lower: '离' };
+      break;
+    case 23: 
+      result = { name: '剥', symbol: '䷖', upper: '艮', lower: '坤' };
+      break;
+    case 24: 
+      result = { name: '复', symbol: '䷗', upper: '坤', lower: '震' };
+      break;
+    case 25: 
+      result = { name: '无妄', symbol: '䷘', upper: '乾', lower: '震' };
+      break;
+    case 26: 
+      result = { name: '大畜', symbol: '䷙', upper: '艮', lower: '乾' };
+      break;
+    case 27: 
+      result = { name: '颐', symbol: '䷚', upper: '艮', lower: '震' };
+      break;
+    case 28: 
+      result = { name: '大过', symbol: '䷛', upper: '兑', lower: '巽' };
+      break;
+    case 29: 
+      result = { name: '坎', symbol: '䷜', upper: '坎', lower: '坎' };
+      break;
+    case 30: 
+      result = { name: '离', symbol: '䷝', upper: '离', lower: '离' };
+      break;
+    case 31: 
+      result = { name: '咸', symbol: '䷞', upper: '兑', lower: '艮' };
+      break;
+    case 32: 
+      result = { name: '恒', symbol: '䷟', upper: '震', lower: '巽' };
+      break;
+    case 33: 
+      result = { name: '遁', symbol: '䷠', upper: '乾', lower: '艮' };
+      break;
+    case 34: 
+      result = { name: '大壮', symbol: '䷡', upper: '震', lower: '乾' };
+      break;
+    case 35: 
+      result = { name: '晋', symbol: '䷢', upper: '离', lower: '坤' };
+      break;
+    case 36: 
+      result = { name: '明夷', symbol: '䷣', upper: '坤', lower: '离' };
+      break;
+    case 37: 
+      result = { name: '家人', symbol: '䷤', upper: '巽', lower: '离' };
+      break;
+    case 38: 
+      result = { name: '睽', symbol: '䷥', upper: '离', lower: '兑' };
+      break;
+    case 39: 
+      result = { name: '蹇', symbol: '䷦', upper: '坎', lower: '艮' };
+      break;
+    case 40: 
+      result = { name: '解', symbol: '䷧', upper: '震', lower: '坎' };
+      break;
+    case 41: 
+      result = { name: '损', symbol: '䷨', upper: '艮', lower: '兑' };
+      break;
+    case 42: 
+      result = { name: '益', symbol: '䷩', upper: '巽', lower: '震' };
+      break;
+    case 43: 
+      result = { name: '夬', symbol: '䷪', upper: '兑', lower: '乾' };
+      break;
+    case 44: 
+      result = { name: '姤', symbol: '䷫', upper: '乾', lower: '巽' };
+      break;
+    case 45: 
+      result = { name: '萃', symbol: '䷬', upper: '兑', lower: '坤' };
+      break;
+    case 46: 
+      result = { name: '升', symbol: '䷭', upper: '坤', lower: '巽' };
+      break;
+    case 47: 
+      result = { name: '困', symbol: '䷮', upper: '兑', lower: '坎' };
+      break;
+    case 48: 
+      result = { name: '井', symbol: '䷯', upper: '坎', lower: '巽' };
+      break;
+    case 49: 
+      result = { name: '革', symbol: '䷰', upper: '兑', lower: '离' };
+      break;
+    case 50: 
+      result = { name: '鼎', symbol: '䷱', upper: '离', lower: '巽' };
+      break;
+    case 51: 
+      result = { name: '震', symbol: '䷲', upper: '震', lower: '震' };
+      break;
+    case 52: 
+      result = { name: '艮', symbol: '䷳', upper: '艮', lower: '艮' };
+      break;
+    case 53: 
+      result = { name: '渐', symbol: '䷴', upper: '巽', lower: '艮' };
+      break;
+    case 54: 
+      result = { name: '归妹', symbol: '䷵', upper: '震', lower: '兑' };
+      break;
+    case 55: 
+      result = { name: '丰', symbol: '䷶', upper: '震', lower: '离' };
+      break;
+    case 56: 
+      result = { name: '旅', symbol: '䷷', upper: '离', lower: '艮' };
+      break;
+    case 57: 
+      result = { name: '巽', symbol: '䷸', upper: '巽', lower: '巽' };
+      break;
+    case 58: 
+      result = { name: '兑', symbol: '䷹', upper: '兑', lower: '兑' };
+      break;
+    case 59: 
+      result = { name: '涣', symbol: '䷺', upper: '巽', lower: '坎' };
+      break;
+    case 60: 
+      result = { name: '节', symbol: '䷻', upper: '坎', lower: '兑' };
+      break;
+    case 61: 
+      result = { name: '中孚', symbol: '䷼', upper: '巽', lower: '兑' };
+      break;
+    case 62: 
+      result = { name: '小过', symbol: '䷽', upper: '震', lower: '艮' };
+      break;
+    case 63: 
+      result = { name: '既济', symbol: '䷾', upper: '坎', lower: '离' };
+      break;
+    case 64: 
+      result = { name: '未济', symbol: '䷿', upper: '离', lower: '坎' };
+      break;
     default:
-      result = { name: `第${code}卦`, symbol: '䷀', upper: '乾', lower: '乾' };
+      result = { name: `未知卦${code}`, symbol: '䷀', upper: '乾', lower: '乾' };
       break;
   }
   

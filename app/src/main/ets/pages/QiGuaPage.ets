@@ -237,6 +237,16 @@ struct QiGuaPage {
                     .fontWeight(FontWeight.Bold)
                     .fontColor('#8E24AA')
 
+                  Text(this.qiGuaResult.changingYaoCount > 0 ? 
+                    `第${this.qiGuaResult.benGua.code}卦（${this.qiGuaResult.benGua.name}）之${this.qiGuaResult.zhiGua.code}卦（${this.qiGuaResult.zhiGua.name}）` :
+                    `第${this.qiGuaResult.benGua.code}卦（${this.qiGuaResult.benGua.name}）`
+                  )
+                    .fontSize(14)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#8E24AA')
+                    .lineHeight(20)
+                    .margin({ bottom: 8 })
+                  
                   Text(getGuaCombinationExplanation(
                     this.qiGuaResult.benGua.name,
                     this.qiGuaResult.changingYaoCount > 0 ? this.qiGuaResult.zhiGua.name : undefined
@@ -416,19 +426,70 @@ struct QiGuaPage {
    */
   @Builder
   QuestionInputDialog() {
-    Column({ space: 20 }) {
+    Column({ space: 16 }) {
       Text('请输入您要问的问题')
         .fontSize(18)
         .fontWeight(FontWeight.Bold)
         .fontColor('#333333')
       
-      TextInput({ placeholder: '例如：工作发展如何？感情运势怎样？' })
+      // 示例问题
+      Column({ space: 8 }) {
+        Text('常见问题示例：')
+          .fontSize(12)
+          .fontColor('#666666')
+          .width('100%')
+          .textAlign(TextAlign.Start)
+        
+        Row({ space: 8 }) {
+          Button('工作运势')
+            .fontSize(10)
+            .fontColor('#8E24AA')
+            .backgroundColor('#F3E5F5')
+            .height(24)
+            .onClick(() => {
+              this.question = '我的工作发展运势如何？';
+            })
+          
+          Button('感情运势')
+            .fontSize(10)
+            .fontColor('#8E24AA')
+            .backgroundColor('#F3E5F5')
+            .height(24)
+            .onClick(() => {
+              this.question = '我的感情运势怎样？';
+            })
+          
+          Button('财运')
+            .fontSize(10)
+            .fontColor('#8E24AA')
+            .backgroundColor('#F3E5F5')
+            .height(24)
+            .onClick(() => {
+              this.question = '近期的财运如何？';
+            })
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+      }
+      
+      TextInput({ 
+        placeholder: '例如：工作发展如何？感情运势怎样？',
+        text: this.question 
+      })
         .fontSize(14)
-        .height(100)
+        .height(80)
         .maxLines(3)
         .onChange((value: string) => {
           this.question = value;
         })
+      
+      if (!this.question.trim()) {
+        Text('请输入您要问的问题，以获得更准确的卦象指引')
+          .fontSize(12)
+          .fontColor('#FF6B35')
+          .textAlign(TextAlign.Center)
+          .width('100%')
+      }
       
       Row({ space: 12 }) {
         Button('取消')
@@ -440,14 +501,23 @@ struct QiGuaPage {
             this.showQuestionInput = false;
           })
         
-        Button('开始起卦')
+        Button(this.qiGuaResult ? '更新问题' : '开始起卦')
           .fontSize(16)
           .fontColor('#FFFFFF')
-          .backgroundColor('#8E24AA')
+          .backgroundColor(this.question.trim() ? '#8E24AA' : '#CCCCCC')
           .layoutWeight(1)
+          .enabled(this.question.trim().length > 0)
           .onClick(() => {
-            this.showQuestionInput = false;
-            this.performQiGuaAnimation();
+            if (this.question.trim()) {
+              this.showQuestionInput = false;
+              if (this.qiGuaResult) {
+                // 如果已有卦象结果，只更新问题
+                this.qiGuaResult.question = this.question;
+              } else {
+                // 如果没有卦象结果，执行起卦
+                this.performQiGuaAnimation();
+              }
+            }
           })
       }
       .width('100%')
@@ -459,7 +529,8 @@ struct QiGuaPage {
   }
 
   build() {
-    Column() {
+    Stack() {
+      Column() {
       // 顶部标题栏
       Row() {
         Button('返回')
@@ -570,7 +641,9 @@ struct QiGuaPage {
                 offsetY: 4
               })
               .onClick(() => {
+                console.log('点击设置问题并起卦按钮');
                 this.showQuestionInput = true;
+                console.log('showQuestionInput设置为:', this.showQuestionInput);
               })
             
             Button('直接起卦')
@@ -636,19 +709,52 @@ struct QiGuaPage {
             // 问题显示
             if (this.qiGuaResult.question) {
               Column({ space: 8 }) {
-                Text('问卦内容')
-                  .fontSize(16)
-                  .fontWeight(FontWeight.Bold)
-                  .fontColor('#333333')
+                Row() {
+                  Text('问卦内容')
+                    .fontSize(16)
+                    .fontWeight(FontWeight.Bold)
+                    .fontColor('#333333')
+                    .layoutWeight(1)
+                  
+                  Button('修改问题')
+                    .fontSize(12)
+                    .fontColor('#8E24AA')
+                    .backgroundColor(Color.Transparent)
+                    .onClick(() => {
+                      this.showQuestionInput = true;
+                    })
+                }
+                .width('100%')
                 
                 Text(this.qiGuaResult.question)
                   .fontSize(14)
                   .fontColor('#666666')
                   .textAlign(TextAlign.Center)
+                  .lineHeight(20)
               }
               .width('100%')
               .padding(16)
               .backgroundColor('#F0F8FF')
+              .borderRadius(8)
+            } else {
+              // 如果没有问题，提供添加问题的选项
+              Column({ space: 8 }) {
+                Text('未设置问卦内容')
+                  .fontSize(16)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor('#666666')
+                
+                Button('添加问题')
+                  .fontSize(14)
+                  .fontColor('#8E24AA')
+                  .backgroundColor('#F3E5F5')
+                  .onClick(() => {
+                    this.showQuestionInput = true;
+                  })
+              }
+              .width('100%')
+              .padding(16)
+              .backgroundColor('#F8F9FA')
               .borderRadius(8)
             }
             
@@ -692,29 +798,18 @@ struct QiGuaPage {
               
               if (this.qiGuaResult.changingYaoCount > 0) {
                 Column({ space: 8 }) {
-                  Text(`${this.qiGuaResult.benGua.name}之${this.qiGuaResult.zhiGua.name}`)
-                    .fontSize(20)
+                  Text(`第${this.qiGuaResult.benGua.code}卦（${this.qiGuaResult.benGua.name}）之${this.qiGuaResult.zhiGua.code}卦（${this.qiGuaResult.zhiGua.name}）`)
+                    .fontSize(18)
                     .fontWeight(FontWeight.Bold)
                     .fontColor('#8E24AA')
                     .textAlign(TextAlign.Center)
-                  
-                  Text(`数字卦：${this.qiGuaResult.benGua.code} → ${this.qiGuaResult.zhiGua.code}`)
-                    .fontSize(14)
-                    .fontWeight(FontWeight.Medium)
-                    .fontColor('#FF6B35')
-                    .textAlign(TextAlign.Center)
+                    .lineHeight(26)
                 }
               } else {
                 Column({ space: 8 }) {
-                  Text(`${this.qiGuaResult.benGua.name}卦`)
-                    .fontSize(20)
+                  Text(`第${this.qiGuaResult.benGua.code}卦（${this.qiGuaResult.benGua.name}）`)
+                    .fontSize(18)
                     .fontWeight(FontWeight.Bold)
-                    .fontColor('#8E24AA')
-                    .textAlign(TextAlign.Center)
-                  
-                  Text(`数字卦：${this.qiGuaResult.benGua.code}`)
-                    .fontSize(14)
-                    .fontWeight(FontWeight.Medium)
                     .fontColor('#8E24AA')
                     .textAlign(TextAlign.Center)
                 }
@@ -780,15 +875,38 @@ struct QiGuaPage {
         .layoutWeight(1)
         .scrollBar(BarState.Auto)
       }
+      }
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#F5F5F5')
+
+      // 问题输入对话框覆盖层
+      if (this.showQuestionInput) {
+        Column() {
+          Column() {
+            this.QuestionInputDialog()
+          }
+          .justifyContent(FlexAlign.Center)
+          .width('100%')
+          .height('100%')
+          .onClick(() => {
+            // 阻止事件冒泡，防止点击对话框内容时关闭
+            // 这里不做任何操作，只是阻止点击事件传播到背景
+          })
+        }
+        .width('100%')
+        .height('100%')
+        .backgroundColor('rgba(0, 0, 0, 0.5)')
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .onClick(() => {
+          // 点击背景关闭对话框
+          this.showQuestionInput = false;
+        })
+      }
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F5F5')
-    .bindSheet($$this.showQuestionInput, this.QuestionInputDialog(), {
-      height: 300,
-      dragBar: false,
-      backgroundColor: Color.Transparent
-    })
     .bindSheet($$this.showJieGua, this.JieGuaResultDialog(), {
       height: '80%',
       dragBar: false,

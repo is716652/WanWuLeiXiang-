@@ -156,8 +156,8 @@ export async function performJieGua(benGuaName: string, zhiGuaName?: string): Pr
  */
 export function getGuaCombinationExplanation(benGuaName: string, zhiGuaName?: string): string {
   if (zhiGuaName) {
-    return `${benGuaName}之${zhiGuaName}：本卦${benGuaName}为当前状况，之卦${zhiGuaName}为发展趋势。变爻指示了变化的关键点。`;
+    return `本卦${benGuaName}为当前状况，之卦${zhiGuaName}为发展趋势。变爻指示了变化的关键点。`;
   } else {
-    return `${benGuaName}卦：卦象稳定，无变爻，当前状况相对稳定，可参考本卦的整体含义。`;
+    return `卦象稳定，无变爻，当前状况相对稳定，可参考本卦的整体含义。`;
   }
 }
