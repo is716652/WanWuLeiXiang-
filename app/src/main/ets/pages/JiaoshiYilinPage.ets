@@ -43,8 +43,8 @@ interface JiaoshiYilinData {
 @Entry
 @Component
 struct JiaoshiYilinPage {
-  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi'];
-  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否'];
+  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi', 'tongren', 'dayou', 'qian_modesty', 'yu'];
+  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否', '同人', '大有', '谦', '豫'];
   @State selectedGuaIndex: number = 0;
   @State currentGuaData: JiaoshiYilinData | null = null;
   @State selectedZhiGuaIndex: number = -1;
@@ -112,11 +112,11 @@ struct JiaoshiYilinPage {
         })
       }
       .columnsTemplate('1fr 1fr 1fr 1fr 1fr 1fr')
-      .rowsTemplate('1fr 1fr')
+      .rowsTemplate('1fr 1fr 1fr')
       .columnsGap(8)
       .rowsGap(8)
       .width('100%')
-      .height(120)
+      .height(180)
     }
     .width('100%')
     .padding(16)
@@ -232,7 +232,7 @@ struct JiaoshiYilinPage {
     if (this.currentGuaData) {
       Column({ space: 12 }) {
         Row() {
-          Text('之卦 (63个)')
+          Text(`之卦 (${this.currentGuaData?.zhiGua.length ?? 0}个)`) 
             .fontSize(16)
             .fontWeight(FontWeight.Bold)
             .fontColor('#333333')

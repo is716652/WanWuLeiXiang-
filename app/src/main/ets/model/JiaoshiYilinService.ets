@@ -61,7 +61,12 @@ const guaNameToFile: Record<string, string> = {
   '小畜': 'xiaoxu',
   '履': 'lv',
   '泰': 'tai',
-  '否': 'pi'
+  '否': 'pi',
+  // 新增四卦映射
+  '同人': 'tongren',
+  '大有': 'dayou',
+  '谦': 'qian_modesty',
+  '豫': 'yu'
 };
 
 /**
@@ -112,7 +117,7 @@ export async function performJieGua(benGuaName: string, zhiGuaName?: string): Pr
       benGuaInfo: null,
       zhiGuaInfo: null,
       isAvailable: false,
-      message: `抱歉，${benGuaName}卦的易林数据暂未收录。\n目前已收录：${availableGuaNames.join('、')}等10卦。\n完整64卦数据正在整理中...`
+      message: `抱歉，${benGuaName}卦的易林数据暂未收录。\n目前已收录：${availableGuaNames.join('、')}等${availableGuaNames.length}卦。\n完整64卦数据正在整理中...`
     };
   }
 
