@@ -69,7 +69,10 @@ const guaNameToFile: Record<string, string> = {
   // 新增三卦映射
   '随': 'sui',
   '蛊': 'gu',
-  '临': 'lin'
+  '临': 'lin',
+  // 新增：观、噬嗑
+  '观': 'guan',
+  '噬嗑': 'shihe'
 };
 
 /**
