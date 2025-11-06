@@ -62,11 +62,14 @@ const guaNameToFile: Record<string, string> = {
   '履': 'lv',
   '泰': 'tai',
   '否': 'pi',
-  // 新增四卦映射
   '同人': 'tongren',
   '大有': 'dayou',
   '谦': 'qian_modesty',
-  '豫': 'yu'
+  '豫': 'yu',
+  // 新增三卦映射
+  '随': 'sui',
+  '蛊': 'gu',
+  '临': 'lin'
 };
 
 /**
