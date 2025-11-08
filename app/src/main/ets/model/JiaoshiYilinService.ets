@@ -75,7 +75,12 @@ const guaNameToFile: Record<string, string> = {
   '噬嗑': 'shihe',
   // 新增：坎、离
   '坎': 'kan',
-  '离': 'li'
+  '离': 'li',
+  // 新增：咸、恒、遁、大壮（31-34）
+  '咸': 'xian',
+  '恒': 'heng',
+  '遁': 'dun',
+  '大壮': 'dazhuang'
 };
 
 /**

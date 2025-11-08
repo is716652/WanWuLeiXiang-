@@ -44,8 +44,8 @@ interface JiaoshiYilinData {
 @Component
 struct JiaoshiYilinPage {
   // 修正为标准六十四卦顺序（1..30），确保卡片序号与卦名一致
-  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi', 'tongren', 'dayou', 'qian_modesty', 'yu', 'sui', 'gu', 'lin', 'guan', 'shihe', 'ben', 'bo', 'fu', 'wuwang', 'daxu', 'yi', 'daguo', 'kan', 'li'];
-  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否', '同人', '大有', '谦', '豫', '随', '蛊', '临', '观', '噬嗑', '贲', '剥', '复', '无妄', '大畜', '颐', '大过', '坎', '离'];
+  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi', 'tongren', 'dayou', 'qian_modesty', 'yu', 'sui', 'gu', 'lin', 'guan', 'shihe', 'ben', 'bo', 'fu', 'wuwang', 'daxu', 'yi', 'daguo', 'kan', 'li', 'xian', 'heng', 'dun', 'dazhuang'];
+  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否', '同人', '大有', '谦', '豫', '随', '蛊', '临', '观', '噬嗑', '贲', '剥', '复', '无妄', '大畜', '颐', '大过', '坎', '离', '咸', '恒', '遁', '大壮'];
   @State selectedGuaIndex: number = 0;
   @State currentGuaData: JiaoshiYilinData | null = null;
   @State selectedZhiGuaIndex: number = -1;
