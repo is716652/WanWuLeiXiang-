@@ -236,6 +236,162 @@ function process(data: DataItem) {
 }
 ```
 
+## 🚫 更多核心限制
+
+### 5. 函数和方法限制
+
+#### 禁止的语法特性
+- 解构赋值：`const [a, b] = array;` 禁止
+- 展开运算符：`const newArr = [...arr];` 禁止
+- 可选链操作符：`obj?.property` 禁止
+- 空值合并操作符：`value ?? defaultValue` 禁止
+
+#### ❌ 错误示例
+```typescript
+// 解构赋值
+const [name, age] = userData; // ❌ 错误
+
+// 展开运算符
+const combined = { ...obj1, ...obj2 }; // ❌ 错误
+const newArray = [...oldArray, newItem]; // ❌ 错误
+
+// 可选链
+const value = obj?.prop?.subProp; // ❌ 错误
+
+// 空值合并
+const result = value ?? default; // ❌ 错误
+```
+
+#### ✅ 正确做法
+```typescript
+// 替代解构赋值
+const name = userData[0];
+const age = userData[1];
+
+// 替代对象展开
+const combined: CombinedType = {
+  prop1: obj1.prop1,
+  prop2: obj2.prop2
+};
+
+// 替代数组展开
+const newArray: ItemType[] = [];
+for (let i = 0; i < oldArray.length; i++) {
+  newArray.push(oldArray[i]);
+}
+newArray.push(newItem);
+
+// 替代可选链
+let value: ValueType;
+if (obj && obj.prop && obj.prop.subProp) {
+  value = obj.prop.subProp;
+}
+
+// 替代空值合并
+let result: ResultType;
+if (value !== null && value !== undefined) {
+  result = value;
+} else {
+  result = default;
+}
+```
+
+### 6. 静态方法限制
+
+#### 静态上下文中的this使用
+- 静态方法中不能使用 `this` 访问实例属性
+- 静态方法中调用其他静态方法必须使用 `ClassName.method()`
+
+#### ❌ 错误示例
+```typescript
+class DataManager {
+  private static data: string[] = [];
+  
+  static addItem(item: string): void {
+    this.data.push(item); // ❌ 错误：静态方法中使用this
+    this.processData(); // ❌ 错误
+  }
+  
+  static processData(): void {
+    // 处理逻辑
+  }
+}
+```
+
+#### ✅ 正确做法
+```typescript
+class DataManager {
+  private static data: string[] = [];
+  
+  static addItem(item: string): void {
+    DataManager.data.push(item); // ✅ 正确
+    DataManager.processData(); // ✅ 正确
+  }
+  
+  static processData(): void {
+    // 处理逻辑
+  }
+  
+  static getData(): string[] {
+    return DataManager.data; // ✅ 正确
+  }
+}
+```
+
+### 7. 类型推断限制
+
+#### 必须显式类型注解的场景
+- 函数返回值类型
+- 变量声明（特别是复杂类型）
+- 类属性定义
+
+#### ❌ 错误示例
+```typescript
+// 缺少返回类型注解
+function createUser(name: string) { // ❌ 错误
+  return { name: name, id: Math.random() };
+}
+
+// 复杂对象缺少类型
+const user = { // ❌ 错误
+  name: "张三",
+  profile: {
+    age: 25,
+    email: "zhang@example.com"
+  }
+};
+```
+
+#### ✅ 正确做法
+```typescript
+interface User {
+  name: string;
+  id: number;
+}
+
+interface UserProfile {
+  age: number;
+  email: string;
+}
+
+interface CompleteUser {
+  name: string;
+  profile: UserProfile;
+}
+
+function createUser(name: string): User { // ✅ 正确
+  return { name: name, id: Math.random() };
+}
+
+const user: CompleteUser = { // ✅ 正确
+  name: "张三",
+  profile: {
+    age: 25,
+    email: "zhang@example.com"
+  }
+};
+```
+
 ## 🛠️ 实用技巧
 
 ### 1. 快速错误定位
@@ -260,6 +416,45 @@ enum Status {
 
 // 使用联合类型限制取值范围
 type Theme = "light" | "dark" | "auto";
+```
+
+### 5. 工具类和辅助方法
+```typescript
+// 数组操作工具类
+class ArrayUtils {
+  static clone<T>(source: T[]): T[] {
+    const result: T[] = [];
+    for (let i = 0; i < source.length; i++) {
+      result.push(source[i]);
+    }
+    return result;
+  }
+  
+  static find<T>(items: T[], predicate: (item: T) => boolean): T | undefined {
+    for (let i = 0; i < items.length; i++) {
+      if (predicate(items[i])) {
+        return items[i];
+      }
+    }
+    return undefined;
+  }
+}
+
+// 对象操作工具类
+class ObjectUtils {
+  static merge<T>(target: T, source: Partial<T>): T {
+    const result: T = { ...target };
+    const keys = Object.keys(source) as (keyof T)[];
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const sourceValue = source[key];
+      if (sourceValue !== undefined) {
+        result[key] = sourceValue;
+      }
+    }
+    return result;
+  }
+}
 ```
 
 ## 🎯 常见场景解决方案
@@ -325,12 +520,211 @@ class ConfigManager {
   };
 
   static getConfig(): AppConfig {
-    return this.config;
+    return ConfigManager.config;
   }
 
   static updateConfig(newConfig: Partial<AppConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    ConfigManager.config = ObjectUtils.merge(ConfigManager.config, newConfig);
   }
+}
+```
+
+### 4. 状态管理模式
+
+#### 场景：组件状态管理
+```typescript
+interface StateData {
+  isLoading: boolean;
+  data: string[];
+  error: string | null;
+}
+
+class StateManager {
+  private static state: StateData = {
+    isLoading: false,
+    data: [],
+    error: null
+  };
+
+  static getState(): StateData {
+    return { ...StateManager.state };
+  }
+
+  static setLoading(loading: boolean): void {
+    StateManager.state.isLoading = loading;
+  }
+
+  static setData(newData: string[]): void {
+    StateManager.state.data = newData;
+    StateManager.state.error = null;
+  }
+
+  static setError(error: string): void {
+    StateManager.state.error = error;
+    StateManager.state.isLoading = false;
+  }
+}
+```
+
+### 5. 数据转换场景
+
+#### 场景：API响应数据转换
+```typescript
+interface ApiResponse {
+  id: string;
+  attributes: {
+    name: string;
+    value: number;
+  };
+  relationships: {
+    category: {
+      data: { id: string; type: string };
+    };
+  };
+}
+
+interface LocalData {
+  id: number;
+  name: string;
+  value: number;
+  categoryId: string;
+}
+
+class DataTransformer {
+  static transformResponse(response: ApiResponse): LocalData {
+    return {
+      id: parseInt(response.id),
+      name: response.attributes.name,
+      value: response.attributes.value,
+      categoryId: response.relationships.category.data.id
+    };
+  }
+
+  static transformBatch(responses: ApiResponse[]): LocalData[] {
+    const result: LocalData[] = [];
+    for (let i = 0; i < responses.length; i++) {
+      result.push(DataTransformer.transformResponse(responses[i]));
+    }
+    return result;
+  }
+}
+```
+
+### 6. 事件处理模式
+
+#### 场景：自定义事件系统
+```typescript
+interface EventData {
+  type: string;
+  payload: Object;
+}
+
+interface EventHandler {
+  (data: EventData): void;
+}
+
+class EventManager {
+  private static listeners: Map<string, EventHandler[]> = new Map();
+
+  static addListener(eventType: string, handler: EventHandler): void {
+    const handlers = EventManager.listeners.get(eventType);
+    if (handlers) {
+      handlers.push(handler);
+    } else {
+      EventManager.listeners.set(eventType, [handler]);
+    }
+  }
+
+  static removeListener(eventType: string, handler: EventHandler): void {
+    const handlers = EventManager.listeners.get(eventType);
+    if (handlers) {
+      for (let i = handlers.length - 1; i >= 0; i--) {
+        if (handlers[i] === handler) {
+          handlers.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  static emit(eventData: EventData): void {
+    const handlers = EventManager.listeners.get(eventData.type);
+    if (handlers) {
+      for (let i = 0; i < handlers.length; i++) {
+        handlers[i](eventData);
+      }
+    }
+  }
+}
+```
+
+## 🔧 性能优化建议
+
+### 1. 避免不必要的对象创建
+```typescript
+// ❌ 频繁创建临时对象
+function processItems(items: string[]): number {
+  let sum = 0;
+  for (let i = 0; i < items.length; i++) {
+    const temp = { value: parseInt(items[i]) }; // 每次循环都创建新对象
+    sum += temp.value;
+  }
+  return sum;
+}
+
+// ✅ 避免临时对象创建
+function processItems(items: string[]): number {
+  let sum = 0;
+  for (let i = 0; i < items.length; i++) {
+    sum += parseInt(items[i]);
+  }
+  return sum;
+}
+```
+
+### 2. 缓存计算结果
+```typescript
+class Calculator {
+  private static cache: Map<string, number> = new Map();
+
+  static expensiveCalculation(input: string): number {
+    const cached = Calculator.cache.get(input);
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    // 模拟复杂计算
+    let result = 0;
+    for (let i = 0; i < 1000; i++) {
+      result += input.length * i;
+    }
+    
+    Calculator.cache.set(input, result);
+    return result;
+  }
+}
+```
+
+### 3. 批量操作优化
+```typescript
+interface DataItem {
+  id: number;
+  value: string;
+}
+
+// ❌ 多次单独操作
+function updateItemsIndividually(items: DataItem[]): void {
+  for (let i = 0; i < items.length; i++) {
+    updateSingleItem(items[i]);
+  }
+}
+
+// ✅ 批量操作
+function updateItemsBatch(items: DataItem[]): void {
+  const updates: string[] = [];
+  for (let i = 0; i < items.length; i++) {
+    updates.push(`UPDATE items SET value = '${items[i].value}' WHERE id = ${items[i].id}`);
+  }
+  executeBatch(updates);
 }
 ```
 
@@ -345,6 +739,12 @@ class ConfigManager {
 - [ ] 对象遍历使用传统循环而非 `for...in`
 - [ ] 所有对象都有明确的接口定义
 - [ ] 静态方法中使用 `ClassName.method()` 而非 `this.method()`
+- [ ] 没有使用解构赋值 `const [a, b] = array`
+- [ ] 没有使用展开运算符 `...`
+- [ ] 没有使用可选链操作符 `?.`
+- [ ] 没有使用空值合并操作符 `??`
+- [ ] 所有函数都有明确的返回类型注解
+- [ ] 复杂类型的变量都有明确的类型注解
 
 ## 🚨 常见编译错误及解决方案
 
@@ -364,6 +764,131 @@ class ConfigManager {
 **原因**：静态方法中使用了this
 **解决**：使用类名.方法名调用
 
+### Error: Destructuring assignment is not allowed
+**原因**：使用了解构赋值语法
+**解决**：使用传统的逐个赋值方式
+
+### Error: Spread operator is not allowed
+**原因**：使用了展开运算符
+**解决**：使用显式的数组/对象操作
+
+### Error: Optional chaining is not allowed
+**原因**：使用了可选链操作符
+**解决**：使用显式的null/undefined检查
+
+### Error: Nullish coalescing is not allowed
+**原因**：使用了空值合并操作符
+**解决**：使用显式的null/undefined检查和三元运算符
+
+### Error: Return type annotation is required
+**原因**：函数缺少返回类型注解
+**解决**：为函数添加明确的返回类型
+
+## 📚 最佳实践总结
+
+### 1. 代码组织
+- 将相关接口组织在同一文件或专门接口文件中
+- 使用清晰的命名约定，接口使用 `I` 前缀或描述性名称
+- 类名使用 PascalCase，方法和变量使用 camelCase
+
+### 2. 类型设计
+- 优先使用组合而非继承
+- 使用联合类型限制值的范围
+- 为可选属性提供明确的默认值
+
+### 3. 错误处理
+- 使用明确的错误类型而非字符串错误
+- 提供详细的错误信息和错误代码
+- 在关键操作点添加适当的错误检查
+
+### 4. 性能考虑
+- 避免在循环中创建不必要的对象
+- 使用缓存机制存储重复计算结果
+- 批量操作优于多次单独操作
+
+### 5. 可维护性
+- 保持函数和类的单一职责
+- 添加适当的注释说明复杂逻辑
+- 使用有意义的变量和方法名
+
+## 🎯 迁移指南
+
+### 从 TypeScript 到 ArkTS 的常见修改
+
+#### 1. 类型定义修改
+```typescript
+// TypeScript 原代码
+interface UserData {
+  [key: string]: any;
+  name?: string;
+}
+
+// ArkTS 修改后
+interface UserData {
+  name: string;
+  // 移除索引签名，明确所有属性
+}
+```
+
+#### 2. 循环语句修改
+```typescript
+// TypeScript 原代码
+for (const key in userData) {
+  console.log(userData[key]);
+}
+
+// ArkTS 修改后
+const keys = Object.keys(userData) as (keyof UserData)[];
+for (let i = 0; i < keys.length; i++) {
+  const key = keys[i];
+  console.log(userData[key]);
+}
+```
+
+#### 3. 对象操作修改
+```typescript
+// TypeScript 原代码
+const combined = { ...obj1, ...obj2 };
+const [first, second] = array;
+
+// ArkTS 修改后
+const combined: CombinedType = {
+  prop1: obj1.prop1,
+  prop2: obj2.prop2
+};
+const first = array[0];
+const second = array[1];
+```
+
+#### 4. 静态方法修改
+```typescript
+// TypeScript 原代码
+class Manager {
+  private static data = [];
+  
+  static process() {
+    this.data.push(item);
+    return this.data;
+  }
+}
+
+// ArkTS 修改后
+class Manager {
+  private static data = [];
+  
+  static process() {
+    Manager.data.push(item);
+    return Manager.data;
+  }
+}
+```
+
+## 📖 参考资源
+
+- [HarmonyOS ArkTS 官方文档](https://developer.harmonyos.com/)
+- [ArkTS 语言规范](https://developer.harmonyos.com/docs/docs/doc-code/ArkTS-ts-0000001280801036)
+- [鸿蒙应用开发最佳实践](https://developer.harmonyos.com/docs/docs/doc-code/ets-guidelines-0000001158361223)
+
 ---
 
-*本文档将持续更新，请遵循最新版本进行开发。*
+*本文档将持续更新，请遵循最新版本进行开发。如有疑问，请参考官方文档或联系开发团队。*

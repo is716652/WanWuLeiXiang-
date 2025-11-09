@@ -1,9 +1,11 @@
 /**
  * 先后天八卦图页面
- * 展示先天八卦图和后天八卦图的详细数据
+ * 展示先天八卦图和后天八卦图的详细数据，集成指南针功能
  */
 
 import router from '@ohos.router';
+import { CompassView } from '../components/CompassView';
+import { BaguaCompassIntegration } from '../components/BaguaCompassIntegration';
 
 // 位置接口
 interface Position {
@@ -30,6 +32,8 @@ interface BaGuaData {
 struct XianTianBaGuaPage {
   @State selectedTab: number = 0; // 0: 先天八卦, 1: 后天八卦
   @State selectedGua: BaGuaData | null = null;
+  @State showCompass: boolean = false; // 是否显示指南针
+  @State currentPage: number = 0; // 0: 八卦图, 1: 指南针, 2: 方位分析
 
   // 先天八卦数据 - 严格按照资料顺序：乾南(上)、兑东南(右上)、离东(右)、震东北(右下)、巽西南(左下)、坎西(左)、艮西北(左上)、坤北(下)
   private xianTianBaGua: BaGuaData[] = [
@@ -444,137 +448,218 @@ struct XianTianBaGuaPage {
       .padding({ left: 16, right: 16 })
       .backgroundColor('#FFFFFF')
 
-      // 标签切换
+      // 功能标签切换
       Row({ space: 0 }) {
-        Button('先天八卦图')
+        Button('八卦图')
           .fontSize(14)
-          .fontColor(this.selectedTab === 0 ? '#FFFFFF' : '#8E24AA')
-          .backgroundColor(this.selectedTab === 0 ? '#8E24AA' : '#F3E5F5')
+          .fontColor(this.currentPage === 0 ? '#FFFFFF' : '#8E24AA')
+          .backgroundColor(this.currentPage === 0 ? '#8E24AA' : '#F3E5F5')
           .borderRadius(8)
           .height(36)
           .layoutWeight(1)
-          .margin({ right: 8 })
+          .margin({ right: 4 })
           .onClick(() => {
-            this.selectedTab = 0;
-            this.selectedGua = this.xianTianBaGua[0];
+            this.currentPage = 0;
           })
 
-        Button('后天八卦图')
+        Button('指南针')
           .fontSize(14)
-          .fontColor(this.selectedTab === 1 ? '#FFFFFF' : '#8E24AA')
-          .backgroundColor(this.selectedTab === 1 ? '#8E24AA' : '#F3E5F5')
+          .fontColor(this.currentPage === 1 ? '#FFFFFF' : '#8E24AA')
+          .backgroundColor(this.currentPage === 1 ? '#8E24AA' : '#F3E5F5')
           .borderRadius(8)
           .height(36)
           .layoutWeight(1)
-          .margin({ left: 8 })
+          .margin({ left: 4, right: 4 })
           .onClick(() => {
-            this.selectedTab = 1;
-            this.selectedGua = this.houTianBaGua[0];
+            this.currentPage = 1;
+          })
+
+        Button('方位分析')
+          .fontSize(14)
+          .fontColor(this.currentPage === 2 ? '#FFFFFF' : '#8E24AA')
+          .backgroundColor(this.currentPage === 2 ? '#8E24AA' : '#F3E5F5')
+          .borderRadius(8)
+          .height(36)
+          .layoutWeight(1)
+          .margin({ left: 4 })
+          .onClick(() => {
+            this.currentPage = 2;
           })
       }
       .width('100%')
       .padding(20)
       .backgroundColor('#FFFFFF')
 
+      // 八卦类型切换（仅在八卦图页面显示）
+      if (this.currentPage === 0) {
+        Row({ space: 0 }) {
+          Button('先天八卦图')
+            .fontSize(14)
+            .fontColor(this.selectedTab === 0 ? '#FFFFFF' : '#8E24AA')
+            .backgroundColor(this.selectedTab === 0 ? '#8E24AA' : '#F3E5F5')
+            .borderRadius(8)
+            .height(36)
+            .layoutWeight(1)
+            .margin({ right: 8 })
+            .onClick(() => {
+              this.selectedTab = 0;
+              this.selectedGua = this.xianTianBaGua[0];
+            })
+
+          Button('后天八卦图')
+            .fontSize(14)
+            .fontColor(this.selectedTab === 1 ? '#FFFFFF' : '#8E24AA')
+            .backgroundColor(this.selectedTab === 1 ? '#8E24AA' : '#F3E5F5')
+            .borderRadius(8)
+            .height(36)
+            .layoutWeight(1)
+            .margin({ left: 8 })
+            .onClick(() => {
+              this.selectedTab = 1;
+              this.selectedGua = this.houTianBaGua[0];
+            })
+        }
+        .width('100%')
+        .padding({ left: 20, right: 20, top: 0, bottom: 10 })
+        .backgroundColor('#FFFFFF')
+      }
+
       // 可滚动内容
       Scroll() {
         Column({ space: 20 }) {
-          // 说明文字
-          Column({ space: 8 }) {
-            Text(this.selectedTab === 0 ? '先天八卦图' : '后天八卦图')
-              .fontSize(18)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#333333')
+          if (this.currentPage === 0) {
+            // 八卦图页面内容
+            Column({ space: 20 }) {
+              // 说明文字
+              Column({ space: 8 }) {
+                Text(this.selectedTab === 0 ? '先天八卦图' : '后天八卦图')
+                  .fontSize(18)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor('#333333')
 
-            Text(this.selectedTab === 0 ? 
-              '伏羲所创，体现宇宙本源秩序，为体' : 
-              '文王所创，体现万物生成规律，为用')
-              .fontSize(13)
-              .fontColor('#666666')
-              .textAlign(TextAlign.Center)
+                Text(this.selectedTab === 0 ? 
+                  '伏羲所创，体现宇宙本源秩序，为体' : 
+                  '文王所创，体现万物生成规律，为用')
+                  .fontSize(13)
+                  .fontColor('#666666')
+                  .textAlign(TextAlign.Center)
 
-            Text('点击卦象可查看详细信息')
-              .fontSize(12)
-              .fontColor('#999999')
-              .textAlign(TextAlign.Center)
-          }
-          .width('100%')
-          .padding(16)
-
-          // 八卦圆形图
-          this.createBaGuaCircle()
-
-          // 卦象详情卡片
-          if (this.selectedGua) {
-            this.createGuaDetailCard()
-          }
-
-          // 理论说明
-          Column({ space: 12 }) {
-            Text('理论说明')
-              .fontSize(16)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#333333')
-              .textAlign(TextAlign.Start)
+                Text('点击卦象可查看详细信息')
+                  .fontSize(12)
+                  .fontColor('#999999')
+                  .textAlign(TextAlign.Center)
+              }
               .width('100%')
+              .padding(16)
 
-            if (this.selectedTab === 0) {
-              Text('先天八卦，又称伏羲八卦，体现宇宙的本源状态和自然秩序。')
-                .fontSize(13)
-                .fontColor('#666666')
-                .lineHeight(18)
-                .textAlign(TextAlign.Start)
+              // 八卦圆形图
+              this.createBaGuaCircle()
 
-              Text('• 乾坤定上下，坎离分左右')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
+              // 卦象详情卡片
+              if (this.selectedGua) {
+                this.createGuaDetailCard()
+              }
 
-              Text('• 震巽居东北西南，艮兑位西北东南')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
+              // 理论说明
+              Column({ space: 12 }) {
+                Text('理论说明')
+                  .fontSize(16)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor('#333333')
+                  .textAlign(TextAlign.Start)
+                  .width('100%')
 
-              Text('• 体现"对待之理"，相对而立，阴阳平衡')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
-            } else {
-              Text('后天八卦，又称文王八卦，体现万物在时空中运行的规律。')
-                .fontSize(13)
-                .fontColor('#666666')
-                .lineHeight(18)
-                .textAlign(TextAlign.Start)
+                if (this.selectedTab === 0) {
+                  Text('先天八卦，又称伏羲八卦，体现宇宙的本源状态和自然秩序。')
+                    .fontSize(13)
+                    .fontColor('#666666')
+                    .lineHeight(18)
+                    .textAlign(TextAlign.Start)
 
-              Text('• 离南坎北，震东兑西')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
+                  Text('• 乾坤定上下，坎离分左右')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
 
-              Text('• 乾坤居西北西南，艮巽位东北东南')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
+                  Text('• 震巽居东北西南，艮兑位西北东南')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
 
-              Text('• 体现"流行之理"，顺应时序，生生不息')
-                .fontSize(12)
-                .fontColor('#666666')
-                .textAlign(TextAlign.Start)
-                .width('100%')
+                  Text('• 体现"对待之理"，相对而立，阴阳平衡')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
+                } else {
+                  Text('后天八卦，又称文王八卦，体现万物在时空中运行的规律。')
+                    .fontSize(13)
+                    .fontColor('#666666')
+                    .lineHeight(18)
+                    .textAlign(TextAlign.Start)
+
+                  Text('• 离南坎北，震东兑西')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
+
+                  Text('• 乾坤居西北西南，艮巽位东北东南')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
+
+                  Text('• 体现"流行之理"，顺应时序，生生不息')
+                    .fontSize(12)
+                    .fontColor('#666666')
+                    .textAlign(TextAlign.Start)
+                    .width('100%')
+                }
+              }
+              .width('100%')
+              .padding(20)
+              .backgroundColor('#F8F9FA')
+              .borderRadius(12)
             }
+            .width('100%')
+            .padding({ top: 20, bottom: 20 })
+          } else if (this.currentPage === 1) {
+            // 指南针页面
+            CompassView()
+          } else if (this.currentPage === 2) {
+            // 方位分析页面
+            Column({ space: 16 }) {
+              // 说明文字
+              Column({ space: 8 }) {
+                Text('八卦方位分析')
+                  .fontSize(18)
+                  .fontWeight(FontWeight.Bold)
+                  .fontColor('#333333')
+
+                Text('结合指南针实时方位，分析对应的先天后天八卦')
+                  .fontSize(13)
+                  .fontColor('#666666')
+                  .textAlign(TextAlign.Center)
+
+                Text('请将设备水平放置以获得准确方位')
+                  .fontSize(12)
+                  .fontColor('#999999')
+                  .textAlign(TextAlign.Center)
+              }
+              .width('100%')
+              .padding(16)
+
+              // 方位分析组件
+              BaguaCompassIntegration()
+            }
+            .width('100%')
+            .padding({ top: 20, bottom: 20 })
           }
-          .width('100%')
-          .padding(20)
-          .backgroundColor('#F8F9FA')
-          .borderRadius(12)
         }
         .width('100%')
-        .padding({ top: 20, bottom: 20 })
       }
       .layoutWeight(1)
       .scrollable(ScrollDirection.Vertical)
