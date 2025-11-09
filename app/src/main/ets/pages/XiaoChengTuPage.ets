@@ -1,5 +1,6 @@
 import { router } from '@kit.ArkUI';
 import { BA_GUA_DATA, XiaoChengTuUtil, QI_GUA_METHOD, XiaoChengTuResult, BaGua } from '../model/XiaoChengTuData';
+import { GuaDetailManager, GuaDetail } from '../model/GuaDetailManager';
 
 @Entry
 @Component
@@ -11,10 +12,23 @@ struct XiaoChengTuPage {
   @State selectedUpperGua: string = '乾';
   @State selectedLowerGua: string = '坤';
   @State showResult: boolean = false;
+  @State guaDetail: GuaDetail | null = null;
+
+  private guaDetailManager: GuaDetailManager = GuaDetailManager.getInstance();
 
   aboutToAppear(): void {
     // 页面加载时自动进行时间起卦
     this.performTimeBasedQiGua();
+  }
+
+  // 加载当前卦象的详细数据
+  private loadCurrentGuaDetail(): void {
+    if (!this.currentResult) {
+      return;
+    }
+
+    const detail = this.guaDetailManager.getGuaDetailByIndex(this.currentResult!.重卦.序号);
+    this.guaDetail = detail;
   }
 
   build() {
@@ -477,6 +491,241 @@ struct XiaoChengTuPage {
       .backgroundColor('rgba(255, 255, 255, 0.05)')
       .borderRadius(8)
 
+      // 详细分析指南
+      Column({ space: 16 }) {
+        Text('📖 卦象分析指南')
+          .fontSize(16)
+          .fontWeight(600)
+          .fontColor('#FFD700')
+
+        // 分析步骤
+        Column({ space: 12 }) {
+          Text('🔍 五步解卦法')
+            .fontSize(14)
+            .fontWeight(600)
+            .fontColor('rgba(255, 215, 0, 0.9)')
+
+          Text('1️⃣ 分析卦象结构')
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+            .margin({ left: 16 })
+
+          Text('   • 上卦（外卦）：天时、外部环境、客观条件')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 下卦（内卦）：地利、内在因素、主观能动性')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 五行生克：分析上下卦五行关系（相生为吉，相克为凶）')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('2️⃣ 确定宫属性质')
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+            .margin({ left: 16 })
+
+          Text('   • 八宫归属：乾宫(金)、坤宫(土)、震宫(木)、巽宫(木)')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 坎宫(水)、离宫(火)、艮宫(土)、兑宫(金)')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 本宫特性：了解该宫的基本性质和能量特征')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('3️⃣ 分析世次位置')
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+            .margin({ left: 16 })
+
+          Text('   • 本宫卦：能量最强，性质最纯粹')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 一至五世：变化程度逐步增强，三世为转折点')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 游魂归魂：精神状态变化，游魂不定，归魂稳定')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('4️⃣ 分析世应关系')
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+            .margin({ left: 16 })
+
+          Text('   • 世爻：代表问卦者本人或事情主体')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 应爻：代表他人、对方或外部环境')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 生克关系：世生应(付出)、应生世(得助)、世克应(主导)、应克世(被动)')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('5️⃣ 综合判断建议')
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+            .margin({ left: 16 })
+
+          Text('   • 结合具体问题：事业、感情、健康、财运等')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 把握时机特征：根据世次判断所处阶段')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+
+          Text('   • 选择合适策略：顺势而为或逆势而动')
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+            .margin({ left: 24 })
+        }
+        .width('100%')
+        .alignItems(HorizontalAlign.Start)
+
+        // 实例分析
+        Column({ space: 8 }) {
+          Text('💡 实时实例分析')
+            .fontSize(14)
+            .fontWeight(600)
+            .fontColor('rgba(255, 215, 0, 0.9)')
+
+          Text(`以当前【${this.currentResult!.重卦.名称}】为例：`)
+            .fontSize(13)
+            .fontColor('rgba(255, 255, 255, 0.8)')
+
+          // 基础分析
+          Text(`• 宫属分析：此卦属${this.currentResult!.重卦.宫属}，具备该宫的基本特质`)
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+
+          Text(`• 世次定位：${this.currentResult!.重卦.世次}，世爻在${this.currentResult!.重卦.世爻}位置`)
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+
+          Text(`• 世应关系：世爻${this.currentResult!.重卦.世爻}与应爻${this.currentResult!.重卦.应爻}的互动关系`)
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+
+          Text(`• 五行配置：上卦${this.currentResult!.上卦.五行}，下卦${this.currentResult!.下卦.五行}，${this.currentResult!.上卦.五行 === this.currentResult!.下卦.五行 ? '五行相同，内外一致' : 
+            (this.currentResult!.上卦.五行 === '金' && this.currentResult!.下卦.五行 === '木') || 
+            (this.currentResult!.上卦.五行 === '木' && this.currentResult!.下卦.五行 === '土') ||
+            (this.currentResult!.上卦.五行 === '土' && this.currentResult!.下卦.五行 === '水') ||
+            (this.currentResult!.上卦.五行 === '水' && this.currentResult!.下卦.五行 === '火') ||
+            (this.currentResult!.上卦.五行 === '火' && this.currentResult!.下卦.五行 === '金') ? '上克下，外制内' : '上生下，外助内'}`)
+            .fontSize(12)
+            .fontColor('rgba(255, 255, 255, 0.7)')
+
+          // 详细解读部分
+          if (this.guaDetail) {
+            Divider()
+              .color('rgba(255, 215, 0, 0.2)')
+              .margin({ top: 8, bottom: 8 })
+
+            // 卦辞解读
+            Column({ space: 4 }) {
+              Text('📜 卦辞解读')
+                .fontSize(12)
+                .fontWeight(600)
+                .fontColor('rgba(255, 215, 0, 0.8)')
+
+              Text(`"${this.guaDetail.卦辞}"`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.8)')
+                .fontStyle(FontStyle.Italic)
+
+              Text(`象辞：${this.guaDetail.象辞}`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.7)')
+            }
+            .width('100%')
+            .alignItems(HorizontalAlign.Start)
+            .margin({ top: 8 })
+
+            // 详细解释
+            Column({ space: 4 }) {
+              Text('🎯 卦象详解')
+                .fontSize(12)
+                .fontWeight(600)
+                .fontColor('rgba(255, 215, 0, 0.8)')
+
+              Text(`整体含义：${this.guaDetail.详细解释.整体含义}`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.7)')
+
+              Text(`人生启示：${this.guaDetail.详细解释.人生启示}`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.7)')
+                .margin({ top: 4 })
+            }
+            .width('100%')
+            .alignItems(HorizontalAlign.Start)
+            .margin({ top: 8 })
+
+            // 实用指导
+            Column({ space: 4 }) {
+              Text('🌟 实用指导')
+                .fontSize(12)
+                .fontWeight(600)
+                .fontColor('rgba(255, 215, 0, 0.8)')
+
+              Text(`吉凶等级：${this.guaDetail.吉凶等级}`)
+                .fontSize(11)
+                .fontColor(this.guaDetail.吉凶等级.includes('上') ? 'rgba(100, 255, 100, 0.8)' : 
+                          this.guaDetail.吉凶等级.includes('中') ? 'rgba(255, 255, 100, 0.8)' : 
+                          'rgba(255, 100, 100, 0.8)')
+
+              Text(`核心象征：${this.guaDetail.核心象征}`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.7)')
+
+              Text(`自然象征：${this.guaDetail.自然象征} | 人伦象征：${this.guaDetail.人伦象征}`)
+                .fontSize(11)
+                .fontColor('rgba(255, 255, 255, 0.6)')
+                .margin({ top: 4 })
+            }
+            .width('100%')
+            .alignItems(HorizontalAlign.Start)
+            .margin({ top: 8 })
+          }
+        }
+        .width('100%')
+        .alignItems(HorizontalAlign.Start)
+        .padding({ top: 12 })
+        .borderRadius(6)
+        .backgroundColor('rgba(255, 215, 0, 0.05)')
+        .padding(12)
+      }
+      .width('100%')
+      .padding(20)
+      .backgroundColor('rgba(255, 255, 255, 0.05)')
+      .borderRadius(8)
+
       // 起卦信息
       Row({ space: 20 }) {
         Text(`起卦方式：${this.currentResult!.起卦方式}`)
@@ -520,6 +769,8 @@ struct XiaoChengTuPage {
 
     this.currentResult = result;
     this.showResult = true;
+    // 加载详细数据
+    this.loadCurrentGuaDetail();
   }
 
   // 执行时间起卦
@@ -527,5 +778,7 @@ struct XiaoChengTuPage {
     const result = XiaoChengTuUtil.timeBasedQiGua();
     this.currentResult = result;
     this.showResult = true;
+    // 加载详细数据
+    this.loadCurrentGuaDetail();
   }
 }

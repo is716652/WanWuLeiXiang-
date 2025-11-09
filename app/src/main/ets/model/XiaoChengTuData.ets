@@ -200,30 +200,25 @@ export class XiaoChengTuUtil {
    */
   private static createResult(upperGua: BaGua, lowerGua: BaGua, method: QI_GUA_METHOD): XiaoChengTuResult {
     // 查找对应的重卦
-    const zhongGua = LIU_SHI_SI_GUA_DATA.find(gua => 
+    let zhongGua = LIU_SHI_SI_GUA_DATA.find(gua => 
       gua.上卦 === upperGua.名称 && gua.下卦 === lowerGua.名称
     );
 
     if (!zhongGua) {
-      // 如果找不到对应的卦，创建一个默认的结果
-      return {
-        上卦: upperGua,
-        下卦: lowerGua,
-        重卦: {
-          名称: `${upperGua.名称}${lowerGua.名称}`,
-          符号: `${upperGua.符号}${lowerGua.符号}`,
-          上卦: upperGua.名称,
-          下卦: lowerGua.名称,
-          序号: 0,
-          宫属: '未知',
-          世次: '未知',
-          世爻: '未知',
-          应爻: '未知'
-        },
-        起卦方式: method,
-        时间: new Date(),
-        解说: XiaoChengTuUtil.generateExplanation(upperGua, lowerGua, null)
-      };
+      console.warn(`未找到卦象组合: ${upperGua.名称}${lowerGua.名称}`);
+      // 尝试通过序号查找
+      const upperIndex = BA_GUA_DATA.findIndex(gua => gua.名称 === upperGua.名称) + 1;
+      const lowerIndex = BA_GUA_DATA.findIndex(gua => gua.名称 === lowerGua.名称) + 1;
+      
+      // 使用数学方法计算重卦序号 (上卦-1)*8 + 下卦
+      const calculatedIndex = (upperIndex - 1) * 8 + lowerIndex;
+      zhongGua = LIU_SHI_SI_GUA_DATA.find(gua => gua.序号 === calculatedIndex);
+    }
+
+    if (!zhongGua) {
+      // 如果还是找不到，使用第一个卦作为默认
+      console.error(`无法创建卦象: ${upperGua.名称}${lowerGua.名称}`);
+      zhongGua = LIU_SHI_SI_GUA_DATA[0]; // 使用乾卦作为默认
     }
 
     return {
