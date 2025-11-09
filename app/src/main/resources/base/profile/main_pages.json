@@ -7,11 +7,13 @@
     "pages/LiuShiSiGuaPage",
     "pages/GuaShuPage",
     "pages/HanDaiPage",
+    "pages/XianTianBaGuaPage",
     "pages/QiGuaPage",
     "pages/JingFangPage",
     "pages/JingFangTablePage",
     "pages/NaJiaPage",
     "pages/GuaQiPage",
-    "pages/JiaoshiYilinPage"
+    "pages/JiaoshiYilinPage",
+    "pages/XiaoChengTuPage"
   ]
 }

@@ -141,6 +141,13 @@ struct Index {
               '#7B1FA2',
               'pages/HanDaiPage'
             )
+
+            this.createNavButton(
+              '小成图起卦',
+              '八卦重合  天人合一  象数解析',
+              '#FF6B35',
+              'pages/XiaoChengTuPage'
+            )
           }
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
