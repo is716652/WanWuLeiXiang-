@@ -80,7 +80,16 @@ const guaNameToFile: Record<string, string> = {
   '咸': 'xian',
   '恒': 'heng',
   '遁': 'dun',
-  '大壮': 'dazhuang'
+  '大壮': 'dazhuang',
+  // 新增：晋、明夷、家人、睽、蹇、解、损、益（35-42）
+  '晋': 'jin',
+  '明夷': 'mingyi',
+  '家人': 'jiaren',
+  '睽': 'kui',
+  '蹇': 'jian',
+  '解': 'jie',
+  '损': 'sun',
+  '益': 'yi_benefit'
 };
 
 /**
