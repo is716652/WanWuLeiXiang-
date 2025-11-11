@@ -145,6 +145,48 @@ struct XiaoChengTuPage {
           .padding(20)
           .backgroundColor('rgba(255, 255, 255, 0.05)')
           .borderRadius(12)
+
+          // 专业版入口 - 独立卡片
+          Column({ space: 16 }) {
+            Text('🔮 专业预测系统')
+              .fontSize(18)
+              .fontWeight(600)
+              .fontColor('#FFD700')
+
+            Text('进阶功能：装卦四盘、四象占法、用神取用、专业断事')
+              .fontSize(14)
+              .fontColor('rgba(255, 255, 255, 0.7)')
+              .textAlign(TextAlign.Center)
+              .lineHeight(20)
+
+            Button() {
+              Row({ space: 8 }) {
+                Text('🎯')
+                  .fontSize(20)
+                Text('进入专业预测')
+                  .fontSize(16)
+                  .fontWeight(600)
+              }
+            }
+            .width('70%')
+            .height(50)
+            .backgroundColor('rgba(139, 69, 19, 0.8)')
+            .fontColor('#FFD700')
+            .borderRadius(25)
+            .borderWidth(2)
+            .borderColor('#FFD700')
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/XiaoChengTuProfessionalPage'
+              });
+            })
+          }
+          .width('100%')
+          .padding(20)
+          .backgroundColor('rgba(139, 69, 19, 0.15)')
+          .borderRadius(12)
+          .borderWidth(2)
+          .borderColor('rgba(255, 215, 0, 0.4)')
           
           // 结果展示
           if (this.showResult && this.currentResult) {
@@ -491,12 +533,12 @@ struct XiaoChengTuPage {
       .backgroundColor('rgba(255, 255, 255, 0.05)')
       .borderRadius(8)
 
-      // 详细分析指南
-      Column({ space: 16 }) {
-        Text('📖 卦象分析指南')
-          .fontSize(16)
-          .fontWeight(600)
-          .fontColor('#FFD700')
+          // 详细分析指南
+          Column({ space: 16 }) {
+            Text('📖 卦象分析指南')
+              .fontSize(16)
+              .fontWeight(600)
+              .fontColor('#FFD700')
 
         // 分析步骤
         Column({ space: 12 }) {
