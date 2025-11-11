@@ -115,7 +115,15 @@ struct HanDaiPage {
 
           // 功能按钮区域
           Column({ space: 16 }) {
-            // 第一行：先后天八卦图
+            // 第一行：河图洛书
+            this.createNavButton(
+              '河图洛书',
+              '天地生成之数  九宫数理结构',
+              '#0D47A1',
+              'pages/HeTuLuoShuPage'
+            )
+
+            // 第二行：先后天八卦图
             this.createNavButton(
               '先后天八卦图',
               '伏羲先天八卦  文王后天八卦',
@@ -123,7 +131,7 @@ struct HanDaiPage {
               'pages/XianTianBaGuaPage'
             )
 
-            // 第二行：焦氏易林起卦
+            // 第三行：焦氏易林起卦
             this.createNavButton(
               '焦氏易林起卦',
               '六爻同时生成法  本卦之卦占验',
@@ -131,7 +139,7 @@ struct HanDaiPage {
               'pages/QiGuaPage'
             )
 
-            // 第三行：京房八宫卦
+            // 第四行：京房八宫卦
             this.createNavButton(
               '京房八宫卦',
               '世应易学  六爻占卜基础',
@@ -139,7 +147,7 @@ struct HanDaiPage {
               'pages/JingFangPage'
             )
 
-            // 第四行：京房重卦法表格
+            // 第五行：京房重卦法表格
             this.createNavButton(
               '京房重卦法表格',
               '卦变规律  阴阳消长',
@@ -147,7 +155,7 @@ struct HanDaiPage {
               'pages/JingFangTablePage'
             )
 
-            // 第五行：纳甲配置表
+            // 第六行：纳甲配置表
             this.createNavButton(
               '纳甲配置表',
               '六爻基础  天干地支配卦',
@@ -155,7 +163,7 @@ struct HanDaiPage {
               'pages/NaJiaPage'
             )
 
-            // 第六行：卦气值日
+            // 第七行：卦气值日
             this.createNavButton(
               '卦气值日',
               '六日七分  冬至起始六十卦轮值',
@@ -163,7 +171,7 @@ struct HanDaiPage {
               'pages/GuaQiPage'
             )
 
-            // 第七行：焦氏易林查询
+            // 第八行：焦氏易林查询
             this.createNavButton(
               '焦氏易林查询',
               '浏览查询  已收录12卦易林内容',
@@ -181,6 +189,12 @@ struct HanDaiPage {
               .fontSize(16)
               .fontWeight(FontWeight.Bold)
               .fontColor('#333333')
+
+            Text('• 河图洛书：天地生成之数与九宫数理的象数基础')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
 
             Text('• 先后天八卦图：伏羲先天八卦与文王后天八卦的完整展示')
               .fontSize(12)
