@@ -128,42 +128,52 @@ struct HeTuLuoShuPage {
       .backgroundColor('#FFF9C4')
       .borderRadius(12)
 
-      // 河图九宫图
+      // 河图数理结构
       Column({ space: 8 }) {
         Text('河图数理结构')
           .fontSize(16)
           .fontWeight(FontWeight.Bold)
           .fontColor('#333333')
 
-        // 河图图形展示（3x3宫格）
-        Column({ space: 2 }) {
-          // 上方：7(火)
-          this.buildHeTuCell('七', '火成', '#FF6B6B', 80)
+        Text('（十字+中心结构，非九宫格）')
+          .fontSize(12)
+          .fontColor('#999999')
 
-          Row({ space: 2 }) {
-            // 左：3(木) 中：5,10(土) 右：4(金)
-            this.buildHeTuCell('三', '木生', '#81C784', 80)
+        // 河图图形展示（十字结构）
+        Column({ space: 4 }) {
+          // 上方：南方火（二生、七成）
+          Column({ space: 2 }) {
+            this.buildHeTuCell('七', '火成', '#FF6B6B', 70)
+            this.buildHeTuCell('二', '火生', '#FF8A80', 70)
+          }
+
+          // 中间横排：木、土、金
+          Row({ space: 4 }) {
+            // 左：东方木（三生、八成）
             Column({ space: 2 }) {
-              this.buildHeTuCell('五', '土生', '#FFD54F', 60)
-              this.buildHeTuCell('十', '土成', '#FFA726', 60)
+              this.buildHeTuCell('八', '木成', '#66BB6A', 70)
+              this.buildHeTuCell('三', '木生', '#81C784', 70)
             }
-            this.buildHeTuCell('四', '金生', '#E0E0E0', 80)
+
+            // 中：中央土（五生、十成）
+            Column({ space: 2 }) {
+              this.buildHeTuCell('十', '土成', '#FFA726', 70)
+              this.buildHeTuCell('五', '土生', '#FFD54F', 70)
+            }
+
+            // 右：西方金（四生、九成）
+            Column({ space: 2 }) {
+              this.buildHeTuCell('九', '金成', '#BDBDBD', 70)
+              this.buildHeTuCell('四', '金生', '#E0E0E0', 70)
+            }
           }
           .justifyContent(FlexAlign.Center)
 
-          Row({ space: 2 }) {
-            // 左：8(木成) 中：1,6(水) 右：9(金成)
-            this.buildHeTuCell('八', '木成', '#66BB6A', 80)
-            Column({ space: 2 }) {
-              this.buildHeTuCell('一', '水生', '#42A5F5', 60)
-              this.buildHeTuCell('六', '水成', '#1976D2', 60)
-            }
-            this.buildHeTuCell('九', '金成', '#BDBDBD', 80)
+          // 下方：北方水（一生、六成）
+          Column({ space: 2 }) {
+            this.buildHeTuCell('一', '水生', '#42A5F5', 70)
+            this.buildHeTuCell('六', '水成', '#1976D2', 70)
           }
-          .justifyContent(FlexAlign.Center)
-
-          // 下方：2(火)
-          this.buildHeTuCell('二', '火生', '#FF8A80', 80)
         }
         .width('100%')
         .padding(16)
