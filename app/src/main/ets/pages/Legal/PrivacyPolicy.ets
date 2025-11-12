@@ -1,4 +1,4 @@
-import { Navigation } from '../../utils/Navigation'
+import { router } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -13,7 +13,7 @@ struct PrivacyPolicyPage {
           .backgroundColor('#F0F0F0')
           .borderRadius(8)
           .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-          .onClick(() => Navigation.back())
+          .onClick(() => router.back())
 
         Text('隐私政策')
           .layoutWeight(1)
@@ -28,7 +28,7 @@ struct PrivacyPolicyPage {
       // 内容区（替换为正式《隐私政策》全文）
       Scroll() {
         Column() {
-          Text('象中六壬（HarmonyOS）APP隐私政策')
+          Text('万物类象（HarmonyOS）APP隐私政策')
             .fontSize(18)
             .fontWeight(FontWeight.Bold)
             .fontColor('#4A4A4A')
@@ -49,7 +49,7 @@ struct PrivacyPolicyPage {
             .fontSize(16)
             .fontWeight(FontWeight.Bold)
             .fontColor('#333333')
-          Text('象中六壬APP是一款由独立开发者（以下简称“我们”）提供的产品。您在使用我们的服务时，我们可能会收集和使用您的相关信息。我们希望通过本《隐私政策》向您说明，在使用我们的服务时，我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。本《隐私政策》与您所使用的象中六壬APP服务息息相关，希望您仔细阅读，在需要时，按照本《隐私政策》的指引，作出您认为适当的选择。本《隐私政策》中涉及的相关技术词汇，我们尽量以简明扼要的表述，并提供进一步说明的链接，以便您的理解。')
+          Text('万物类象APP是一款由独立开发者（以下简称"我们"）提供的产品。您在使用我们的服务时，我们可能会收集和使用您的相关信息。我们希望通过本《隐私政策》向您说明，在使用我们的服务时，我们如何收集、使用、储存和分享这些信息，以及我们为您提供的访问、更新、控制和保护这些信息的方式。本《隐私政策》与您所使用的万物类象APP服务息息相关，希望您仔细阅读，在需要时，按照本《隐私政策》的指引，作出您认为适当的选择。本《隐私政策》中涉及的相关技术词汇，我们尽量以简明扼要的表述，并提供进一步说明的链接，以便您的理解。')
             .fontSize(14)
             .fontColor('#333333')
             .lineHeight(22)

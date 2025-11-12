@@ -1,4 +1,5 @@
 import { router } from '@kit.ArkUI';
+import { preferences } from '@kit.ArkData';
 
 @Entry
 @Component
@@ -6,8 +7,12 @@ struct Index {
   @State titleOpacity: number = 0;
   @State subtitleOpacity: number = 0;
   @State buttonsOpacity: number = 0;
+  @State showAgreementDialog: boolean = false;
 
-  aboutToAppear(): void {
+  async aboutToAppear(): Promise<void> {
+    // 检查是否首次访问
+    await this.checkFirstVisit();
+
     // 标题动画
     animateTo({
       duration: 800,
@@ -34,6 +39,33 @@ struct Index {
     }, () => {
       this.buttonsOpacity = 1;
     });
+  }
+
+  // 检查是否首次访问
+  async checkFirstVisit(): Promise<void> {
+    try {
+      const dataPreferences = await preferences.getPreferences(getContext(this), 'appSettings');
+      const hasAgreed = await dataPreferences.get('hasAgreedToTerms', false);
+      
+      if (!hasAgreed) {
+        // 首次访问，显示协议弹窗
+        this.showAgreementDialog = true;
+      }
+    } catch (err) {
+      console.error('检查首次访问失败:', err);
+    }
+  }
+
+  // 同意协议
+  async agreeToTerms(): Promise<void> {
+    try {
+      const dataPreferences = await preferences.getPreferences(getContext(this), 'appSettings');
+      await dataPreferences.put('hasAgreedToTerms', true);
+      await dataPreferences.flush();
+      this.showAgreementDialog = false;
+    } catch (err) {
+      console.error('保存协议状态失败:', err);
+    }
   }
 
   build() {
@@ -152,12 +184,36 @@ struct Index {
           .opacity(this.buttonsOpacity)
           .margin({ top: 40 })
 
-          // 底部提示
-          Text('点击卡片进入查询')
-            .fontSize(14)
-            .fontColor('rgba(255, 255, 255, 0.5)')
-            .margin({ top: 30, bottom: 60 })
-            .opacity(this.buttonsOpacity)
+          // 底部提示和协议入口
+          Column({ space: 16 }) {
+            Text('点击卡片进入查询')
+              .fontSize(14)
+              .fontColor('rgba(255, 255, 255, 0.5)')
+
+            // 用户协议和隐私政策入口
+            Row({ space: 20 }) {
+              Text('用户协议')
+                .fontSize(12)
+                .fontColor('rgba(255, 255, 255, 0.6)')
+                .onClick(() => {
+                  router.pushUrl({ url: 'pages/Legal/UserAgreement' });
+                })
+
+              Text('|')
+                .fontSize(12)
+                .fontColor('rgba(255, 255, 255, 0.3)')
+
+              Text('隐私政策')
+                .fontSize(12)
+                .fontColor('rgba(255, 255, 255, 0.6)')
+                .onClick(() => {
+                  router.pushUrl({ url: 'pages/Legal/PrivacyPolicy' });
+                })
+            }
+            .justifyContent(FlexAlign.Center)
+          }
+          .margin({ top: 30, bottom: 60 })
+          .opacity(this.buttonsOpacity)
         }
         .width('100%')
         .padding({ left: 20, right: 20 })
@@ -166,6 +222,106 @@ struct Index {
       .height('100%')
       .scrollBar(BarState.Auto)
       .edgeEffect(EdgeEffect.Spring)
+
+      // 用户协议弹窗
+      if (this.showAgreementDialog) {
+        Column() {
+          Column({ space: 20 }) {
+            // 标题
+            Text('用户协议与隐私政策')
+              .fontSize(20)
+              .fontWeight(FontWeight.Bold)
+              .fontColor('#333333')
+
+            // 内容
+            Column({ space: 12 }) {
+              Text('欢迎使用万物类象APP！')
+                .fontSize(16)
+                .fontColor('#333333')
+                .width('100%')
+
+              Text('在使用我们的服务前，请您仔细阅读并同意：')
+                .fontSize(14)
+                .fontColor('#666666')
+                .width('100%')
+
+              Row({ space: 4 }) {
+                Text('《')
+                  .fontSize(14)
+                  .fontColor('#666666')
+                Text('用户协议')
+                  .fontSize(14)
+                  .fontColor('#1E88E5')
+                  .decoration({ type: TextDecorationType.Underline })
+                  .onClick(() => {
+                    router.pushUrl({ url: 'pages/Legal/UserAgreement' });
+                  })
+                Text('》和《')
+                  .fontSize(14)
+                  .fontColor('#666666')
+                Text('隐私政策')
+                  .fontSize(14)
+                  .fontColor('#1E88E5')
+                  .decoration({ type: TextDecorationType.Underline })
+                  .onClick(() => {
+                    router.pushUrl({ url: 'pages/Legal/PrivacyPolicy' });
+                  })
+                Text('》')
+                  .fontSize(14)
+                  .fontColor('#666666')
+              }
+              .width('100%')
+
+              Text('当前版本不收集您的个人信息，无需账号即可浏览所有内容。')
+                .fontSize(13)
+                .fontColor('#999999')
+                .width('100%')
+                .margin({ top: 8 })
+            }
+            .width('100%')
+            .padding(16)
+            .backgroundColor('#F5F5F5')
+            .borderRadius(8)
+
+            // 按钮
+            Row({ space: 12 }) {
+              Button('不同意并退出')
+                .fontSize(14)
+                .fontColor('#666666')
+                .backgroundColor('#E0E0E0')
+                .layoutWeight(1)
+                .onClick(() => {
+                  // 退出应用 - 返回并关闭
+                  router.back();
+                })
+
+              Button('同意并继续')
+                .fontSize(14)
+                .fontColor('#FFFFFF')
+                .backgroundColor('#1E88E5')
+                .layoutWeight(1)
+                .onClick(() => {
+                  this.agreeToTerms();
+                })
+            }
+            .width('100%')
+          }
+          .width('85%')
+          .padding(24)
+          .backgroundColor('#FFFFFF')
+          .borderRadius(16)
+          .shadow({
+            radius: 30,
+            color: 'rgba(0, 0, 0, 0.3)',
+            offsetX: 0,
+            offsetY: 10
+          })
+        }
+        .width('100%')
+        .height('100%')
+        .backgroundColor('rgba(0, 0, 0, 0.5)')
+        .justifyContent(FlexAlign.Center)
+      }
     }
     .width('100%')
     .height('100%')

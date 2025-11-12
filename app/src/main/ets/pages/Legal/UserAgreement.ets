@@ -1,4 +1,4 @@
-import { Navigation } from '../../utils/Navigation'
+import { router } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -13,7 +13,7 @@ struct UserAgreementPage {
           .backgroundColor('#F0F0F0')
           .borderRadius(8)
           .padding({ left: 12, right: 12, top: 6, bottom: 6 })
-          .onClick(() => Navigation.back())
+          .onClick(() => router.back())
 
         Text('用户协议')
           .layoutWeight(1)
@@ -28,7 +28,7 @@ struct UserAgreementPage {
       // 内容区（替换为正式《用户协议》全文）
       Scroll() {
         Column() {
-          Text('象中六壬APP用户协议')
+          Text('万物类象APP用户协议')
             .fontSize(18)
             .fontWeight(FontWeight.Bold)
             .fontColor('#4A4A4A')
@@ -38,7 +38,7 @@ struct UserAgreementPage {
             .fontWeight(FontWeight.Bold)
             .fontColor('#333333')
             .margin({ top: 8, bottom: 4 })
-          Text('象中六壬APP由独立开发者（以下简称“我们”）提供。本协议是你（以下简称“用户”）与我们之间就使用本软件与服务达成的约定。你开始使用或继续使用，视为已阅读并同意本协议。当前版本无需账号即可浏览信息。')
+          Text('万物类象APP由独立开发者（以下简称"我们"）提供。本协议是你（以下简称"用户"）与我们之间就使用本软件与服务达成的约定。你开始使用或继续使用，视为已阅读并同意本协议。当前版本无需账号即可浏览信息。')
             .fontSize(14)
             .fontColor('#333333')
             .lineHeight(22)
@@ -91,7 +91,7 @@ struct UserAgreementPage {
             Text('《隐私政策》')
               .fontSize(14)
               .fontColor('#1E88E5')
-              .onClick(() => Navigation.pushUrl('pages/Legal/PrivacyPolicy'))
+              .onClick(() => router.pushUrl({ url: 'pages/Legal/PrivacyPolicy' }))
           }
           .width('100%')
 
@@ -100,7 +100,7 @@ struct UserAgreementPage {
             .fontWeight(FontWeight.Bold)
             .fontColor('#333333')
             .margin({ top: 8, bottom: 4 })
-          Text('本软件按“现状”和“可用性”提供，我们不对服务的准确性、适用性、持续性作出保证。因使用或无法使用本软件而造成的间接或附带损失，我们不承担责任。对第三方链接或服务的内容与安全性，我们不作担保。')
+          Text('本软件按"现状"和"可用性"提供，我们不对服务的准确性、适用性、持续性作出保证。因使用或无法使用本软件而造成的间接或附带损失，我们不承担责任。对第三方链接或服务的内容与安全性，我们不作担保。')
             .fontSize(14)
             .fontColor('#333333')
             .lineHeight(22)

@@ -16,6 +16,8 @@
     "pages/GuaQiPage",
     "pages/JiaoshiYilinPage",
     "pages/XiaoChengTuPage",
-    "pages/XiaoChengTuProfessionalPage"
+    "pages/XiaoChengTuProfessionalPage",
+    "pages/Legal/UserAgreement",
+    "pages/Legal/PrivacyPolicy"
   ]
 }
