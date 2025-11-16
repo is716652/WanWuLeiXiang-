@@ -1,0 +1,205 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2025-11-15T03:24:47.271Z
+provider: 
+---
+
+# HarmonyOS 万物类象项目专属开发规范
+
+> **重要**: 本规则**仅适用于当前鸿蒙项目**，不影响其他项目
+
+## 🎯 项目识别
+
+**项目路径**: `d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings`  
+**项目类型**: HarmonyOS (鸿蒙)  
+**开发语言**: ArkTS  
+**应用名称**: 万物类象 (Analogical Categorization)
+
+## 📋 规范文档优先级
+
+### 1. ArkTS开发规范指南 ⭐⭐⭐⭐⭐
+**文件**: `./ArkTS开发规范指南.md`
+
+**核心禁用规则**:
+```typescript
+// ❌ 绝对禁止
+- any / unknown 类型
+- 索引签名 [key: string]: T
+- 内联对象字面量类型
+- for...in / for...of 遍历对象
+- 动态索引访问 obj[key]
+- 未类型化的对象字面量
+
+// ✅ 必须使用
+- 明确的接口定义
+- Map/Record 替代动态对象
+- 传统 for 循环遍历对象
+- switch 或类型断言替代动态访问
+```
+
+### 2. 鸿蒙命令行编译助手 ⭐⭐⭐⭐
+**文件**: `./鸿蒙命令行编译助手.md`
+
+**标准编译命令**:
+```bash
+# 进入项目目录
+cd d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings
+
+# 清理并编译
+hvigorw clean
+hvigorw assembleHap --no-daemon
+
+# 依赖管理
+ohpm install
+```
+
+## 🔒 强制规范（零容忍）
+
+### 类型定义
+```typescript
+// ❌ 错误 - 编译失败
+let data: any = {...}
+interface User { [key: string]: string }
+const config = { api: "xxx", timeout: 5000 };
+
+// ✅ 正确 - 必须这样写
+interface User {
+  name: string;
+  age: number;
+}
+let data: User = {...}
+
+interface Config {
+  api: string;
+  timeout: number;
+}
+const config: Config = { api: "xxx", timeout: 5000 };
+```
+
+### 对象遍历
+```typescript
+// ❌ 错误 - 编译失败
+for (const key in obj) { }
+for (const val of obj) { }
+
+// ✅ 正确 - 必须使用传统循环
+const keys = Object.keys(obj);
+for (let i = 0; i < keys.length; i++) {
+  const key = keys[i];
+  // ...
+}
+```
+
+### 动态数据
+```typescript
+// ❌ 错误 - 禁止索引签名
+const data: { [key: string]: string } = {};
+
+// ✅ 正确 - 使用Map
+const data = new Map<string, string>();
+data.set("field", "value");
+```
+
+### Builder组件
+```typescript
+// ❌ 错误 - 禁止early return
+@Builder
+buildUI() {
+  if (!this.data) return;  // ❌ 编译错误
+  Text('...')
+}
+
+// ✅ 正确 - 用if包裹
+@Builder
+buildUI() {
+  if (this.data) {  // ✅ 正确
+    Text('...')
+  }
+}
+```
+
+## 📁 项目特定规范
+
+### 应用名称统一
+- ✅ **使用**: "万物类象APP" / "万物类象"
+- ❌ **禁止**: "象中六壬APP" (已废弃)
+
+### 路由管理
+- **配置文件**: `app/src/main/resources/base/profile/main_pages.json`
+- **导入模块**: `import { router } from '@kit.ArkUI'`
+- 新增页面必须添加路由配置
+
+### 数据持久化
+```typescript
+import { preferences } from '@kit.ArkData';
+
+const prefs = await preferences.getPreferences(
+  getContext(this), 
+  'appSettings'
+);
+```
+
+### UI/UX规范
+- **主色调**: 深蓝渐变 `#1a1a2e` → `#0f3460`
+- **强调色**: 金黄 `#FFD700`
+- **圆角**: 12-16px (卡片), 25px (按钮)
+- **动画**: 800ms, `Curve.EaseOut`
+
+## ⚙️ 编译前自动检查
+
+```
+✓ 是否有未定义类型的接口？
+✓ 是否使用了动态索引访问？
+✓ 是否有 for...in 遍历对象？
+✓ @Builder 中是否有 early return？
+✓ 新页面是否添加路由配置？
+✓ 是否导入了正确的模块？
+```
+
+## 🚀 标准编译流程
+
+```bash
+# 1. 进入项目目录
+cd d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings
+
+# 2. 清理并编译
+hvigorw clean
+hvigorw assembleHap --no-daemon
+
+# 3. 期望结果
+# BUILD SUCCESSFUL in Xs
+```
+
+## 📝 代码审查清单
+
+提交前自动检查:
+- [x] ArkTS规范100%合规
+- [x] 接口定义完整
+- [x] 路由配置正确
+- [x] UI风格统一
+- [x] 编译零错误零警告
+
+## 🔗 文档路径
+
+```
+./ArkTS开发规范指南.md         (最高优先级)
+./鸿蒙命令行编译助手.md         (编译标准)
+./说明文档/                    (功能说明)
+./资料/                        (参考资料)
+```
+
+## 💡 开发提示
+
+1. **任何代码修改前**: 先参考 `ArkTS开发规范指南.md`
+2. **编译前**: 使用标准命令 `hvigorw assembleHap --no-daemon`
+3. **遇到编译错误**: 90%是违反了ArkTS规范
+4. **新增功能后**: 更新说明文档
+
+---
+
+**⚠️ 重要**: 
+- 本规则**仅在本项目目录**内生效
+- 切换到其他项目时自动失效
+- 规则文件位置: `.codebuddy/rules/` (项目级)

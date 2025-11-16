@@ -1,0 +1,206 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2025-11-15T03:22:27.063Z
+provider: 
+---
+
+# HarmonyOS 万物类象项目开发规范
+
+## 🎯 项目信息
+- **项目名称**: 万物类象 (Analogical Categorization)
+- **平台**: HarmonyOS (鸿蒙)
+- **语言**: ArkTS (TypeScript严格模式)
+- **应用类型**: 易学类象知识库
+
+## 📋 必读文档优先级
+
+在进行任何代码设计、修改或编译操作前，**必须优先参考**以下文档：
+
+### 1. ArkTS开发规范指南 (最高优先级)
+**文件路径**: `d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings\ArkTS开发规范指南.md`
+
+**核心禁用规则**:
+- ❌ 禁止使用 `any` 和 `unknown` 类型
+- ❌ 禁止使用索引签名 `[key: string]: T`
+- ❌ 禁止使用内联对象字面量类型
+- ❌ 禁止使用 `for...in` 和 `for...of` 遍历对象
+- ❌ 禁止动态索引访问 `obj[key]`
+- ❌ 禁止未类型化的对象字面量
+
+**必须遵守**:
+- ✅ 所有接口必须预先明确定义
+- ✅ 使用 `Map` 或 `Record` 替代动态对象
+- ✅ 使用传统 `for` 循环遍历对象
+- ✅ 使用 `switch` 或类型断言替代动态访问
+- ✅ @Builder 组件中不能使用 `if early return`，必须用 `if { }` 包裹
+
+### 2. 鸿蒙命令行编译助手
+**文件路径**: `d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings\鸿蒙命令行编译助手.md`
+
+**编译命令标准**:
+```bash
+# 清理并编译 (推荐流程)
+cd d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings
+hvigorw clean
+hvigorw assembleHap
+
+# 快速编译 (无守护进程)
+hvigorw assembleHap --no-daemon
+
+# 依赖管理
+ohpm install
+```
+
+## 🔧 编码规范强制要求
+
+### 类型定义
+```typescript
+// ❌ 错误写法
+let data: any = {...}
+interface User { [key: string]: string }
+
+// ✅ 正确写法
+interface User {
+  name: string;
+  age: number;
+}
+let data: User = {...}
+```
+
+### 对象遍历
+```typescript
+// ❌ 错误写法
+for (const key in obj) { }
+
+// ✅ 正确写法
+const keys = Object.keys(obj);
+for (let i = 0; i < keys.length; i++) {
+  const key = keys[i];
+  // 处理...
+}
+```
+
+### 动态数据存储
+```typescript
+// ❌ 错误写法
+const data: { [key: string]: string } = {};
+data["field"] = "value";
+
+// ✅ 正确写法
+const data = new Map<string, string>();
+data.set("field", "value");
+```
+
+### Builder组件
+```typescript
+// ❌ 错误写法
+@Builder
+buildComponent() {
+  if (!this.data) return;
+  // UI组件...
+}
+
+// ✅ 正确写法
+@Builder
+buildComponent() {
+  if (this.data) {
+    // UI组件...
+  }
+}
+```
+
+## 📁 项目特定规范
+
+### 应用名称
+- **统一使用**: "万物类象APP" 或 "万物类象"
+- **禁止使用**: "象中六壬APP" (已废弃)
+
+### 路由配置
+- **配置文件**: `app/src/main/resources/base/profile/main_pages.json`
+- **新增页面必须添加路由**
+- **使用 `router` 模块**: `import { router } from '@kit.ArkUI'`
+
+### 数据持久化
+- **使用**: `@kit.ArkData` 中的 `preferences`
+- **示例**:
+```typescript
+import { preferences } from '@kit.ArkData';
+const prefs = await preferences.getPreferences(getContext(this), 'appSettings');
+```
+
+### 用户协议和隐私
+- **首次访问弹窗**: 使用 `preferences` 存储 `hasAgreedToTerms`
+- **协议页面路径**: `pages/Legal/UserAgreement`、`pages/Legal/PrivacyPolicy`
+
+## 🎨 UI/UX规范
+
+### 颜色主题
+- **主色调**: 深蓝渐变 `#1a1a2e` → `#0f3460`
+- **强调色**: 金黄色 `#FFD700`
+- **卡片背景**: 半透明白色 `rgba(255, 255, 255, 0.05)`
+
+### 动画效果
+- **标准时长**: 800ms
+- **曲线**: `Curve.EaseOut`
+- **延迟**: 渐进式 (200ms, 600ms, 1000ms)
+
+### 按钮设计
+- **圆角**: 12-16px (卡片), 25px (圆角按钮)
+- **阴影**: 使用 `.shadow()` 增加层次感
+- **间距**: 统一使用 20px (卡片间), 16px (内边距)
+
+## ⚠️ 编译前检查清单
+
+每次编译前必须确认:
+- [ ] 是否有新增的接口未定义类型？
+- [ ] 是否使用了动态索引访问？
+- [ ] 是否有 `for...in` 遍历对象？
+- [ ] @Builder 中是否有 early return？
+- [ ] 新增页面是否添加到 `main_pages.json`？
+- [ ] 是否导入了正确的模块 (`@kit.ArkUI` 等)？
+
+## 🚀 编译标准流程
+
+```bash
+# 1. 进入项目目录
+cd d:\DevEcoStudioProjects\AnalogicalCategorizationAllThings
+
+# 2. 检查代码规范
+# (AI助手会自动检查)
+
+# 3. 清理并编译
+hvigorw clean
+hvigorw assembleHap --no-daemon
+
+# 4. 验证结果
+# 期望: BUILD SUCCESSFUL
+```
+
+## 📝 代码审查要点
+
+提交代码前AI助手会自动检查:
+1. **ArkTS规范合规性** (零容忍违规)
+2. **接口定义完整性**
+3. **路由配置正确性**
+4. **UI一致性** (颜色、间距、圆角)
+5. **编译零错误零警告**
+
+## 🔗 相关文档位置
+
+- ArkTS规范: `/ArkTS开发规范指南.md`
+- 编译助手: `/鸿蒙命令行编译助手.md`
+- 功能说明: `/说明文档/` 目录
+- 资料库: `/资料/` 目录
+
+## 💡 开发建议
+
+- **阅读优先**: 在修改代码前先查看相关功能说明文档
+- **测试编译**: 每次修改后立即编译验证
+- **规范第一**: 宁可多写代码，也要严格遵守ArkTS规范
+- **文档同步**: 新增功能后更新说明文档
+
+---
+
+**重要提示**: 本规则为 `always` 类型，AI助手在处理本项目的**任何操作**时都会自动应用这些规范，无需额外提醒。
