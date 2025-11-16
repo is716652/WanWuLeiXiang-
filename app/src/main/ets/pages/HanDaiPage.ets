@@ -174,7 +174,7 @@ struct HanDaiPage {
             // 第八行：焦氏易林查询
             this.createNavButton(
               '焦氏易林查询',
-              '浏览查询  已收录12卦易林内容',
+              '浏览查询  已收录45卦易林内容',
               '#9C27B0',
               'pages/JiaoshiYilinPage'
             )
@@ -232,7 +232,7 @@ struct HanDaiPage {
               .textAlign(TextAlign.Start)
               .width('100%')
 
-            Text('• 焦氏易林查询：已收录12卦完整易林内容')
+            Text('• 焦氏易林查询：已收录45卦完整易林内容（新增夬、姤、萃）')
               .fontSize(12)
               .fontColor('#666666')
               .textAlign(TextAlign.Start)
