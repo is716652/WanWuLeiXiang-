@@ -82,8 +82,13 @@ struct NaYinPage {
         .layoutWeight(1)
         .textAlign(TextAlign.Center)
 
-      Row()
-        .width(24)
+      Button() {
+        Text('🤖').fontSize(18).fontColor('#FFFFFF')
+      }
+        .width(36).height(36)
+        .backgroundColor('rgba(255,255,255,0.15)')
+        .borderRadius(18)
+        .onClick(() => { router.pushUrl({ url: 'pages/BaiXiaoShengPanel' }); })
     }
     .width('100%')
     .height(56)

@@ -18,6 +18,8 @@
     "pages/XiaoChengTuPage",
     "pages/XiaoChengTuProfessionalPage",
     "pages/Legal/UserAgreement",
-    "pages/Legal/PrivacyPolicy"
+    "pages/Legal/PrivacyPolicy",
+    "pages/BaiXiaoShengPanel",
+    "pages/AgentConfigPage"
   ]
 }

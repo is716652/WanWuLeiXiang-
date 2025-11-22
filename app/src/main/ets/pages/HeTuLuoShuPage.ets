@@ -28,8 +28,13 @@ struct HeTuLuoShuPage {
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
 
-        Text('')
-          .width(60) // 占位
+        Button() {
+          Text('🤖').fontSize(18).fontColor('#1A237E')
+        }
+          .width(36).height(36)
+          .backgroundColor('rgba(26,35,126,0.06)')
+          .borderRadius(18)
+          .onClick(() => { router.pushUrl({ url: 'pages/BaiXiaoShengPanel' }); })
       }
       .width('100%')
       .height(56)

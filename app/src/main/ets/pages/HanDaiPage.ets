@@ -80,8 +80,13 @@ struct HanDaiPage {
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
 
-        Text('')
-          .width(60) // 占位，保持标题居中
+        Button() {
+          Text('🤖').fontSize(18).fontColor('#8E24AA')
+        }
+          .width(36).height(36)
+          .backgroundColor('rgba(142,36,170,0.08)')
+          .borderRadius(18)
+          .onClick(() => { router.pushUrl({ url: 'pages/BaiXiaoShengPanel' }); })
       }
       .width('100%')
       .height(56)

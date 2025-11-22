@@ -72,6 +72,19 @@ struct GuaShuPage {
           .layoutWeight(1)
           .textAlign(TextAlign.Center)
           .margin({ right: 40 })
+
+        Button() {
+          Text('🤖')
+            .fontSize(18)
+            .fontColor('#FFFFFF')
+        }
+        .width(40)
+        .height(40)
+        .backgroundColor('rgba(255, 255, 255, 0.1)')
+        .borderRadius(20)
+        .onClick(() => {
+          router.pushUrl({ url: 'pages/BaiXiaoShengPanel' });
+        })
       }
       .width('100%')
       .height(60)
