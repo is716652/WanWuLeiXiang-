@@ -15,6 +15,7 @@ struct BaiXiaoShengPanel {
   @State localResults: KBItem[] = [];
   @State aiReply: string = '';
   @State bannerHint: string = '';
+  @State hasSearched: boolean = false;
 
   aboutToAppear(): void {
     // 默认：加载部分 rawfile 下的数据（示例）
@@ -50,6 +51,7 @@ struct BaiXiaoShengPanel {
       const results: KBItem[] = this.kb.search(this.query);
       const out: KBItem[] = [];
       const trimmed: string = this.query.trim();
+      this.hasSearched = true;
       if (trimmed !== '') {
         try {
           const report: KBItem = this.analyzer.analyze(trimmed, this.kb);
@@ -203,12 +205,16 @@ struct BaiXiaoShengPanel {
           .layoutWeight(1)
           .padding({ left: 16, right: 16, top: 8, bottom: 16 })
         } else {
-          Column() {
-            Text('未找到相关资料').fontSize(16).fontColor('#333333')
-            Text('提示：可尝试更短的关键词（如“洛书”、“河图”），或切换到联网模式').fontSize(12).fontColor('#777777').lineHeight(18)
+          if (this.hasSearched) {
+            Column() {
+              Text('未找到相关资料').fontSize(16).fontColor('#333333')
+              Text('提示：可尝试更短的关键词（如“洛书”、“河图”），或切换到联网模式').fontSize(12).fontColor('#777777').lineHeight(18)
+            }
+            .layoutWeight(1)
+            .padding({ left: 16, right: 16, top: 12 })
+          } else {
+            // 初始进入不显示空态，Chip引导已在上方展示
           }
-          .layoutWeight(1)
-          .padding({ left: 16, right: 16, top: 12 })
         }
       } else {
         Column() {
