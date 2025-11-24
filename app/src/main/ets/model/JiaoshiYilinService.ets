@@ -93,7 +93,12 @@ const guaNameToFile: Record<string, string> = {
   // 新增：夬、姤、萃（43-45）
   '夬': 'guai',
   '姤': 'gou',
-  '萃': 'cui'
+  '萃': 'cui',
+  // 新增：升、困、井、革（46-49）
+  '升': 'sheng',
+  '困': 'kun_difficulty',
+  '井': 'jing',
+  '革': 'ge'
 };
 
 /**
