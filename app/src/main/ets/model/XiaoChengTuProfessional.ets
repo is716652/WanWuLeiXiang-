@@ -1,19 +1,46 @@
 /*
  * 小成图专业版数据模型
+ * 基于苏国圣-卢德君《小成图解读》专业理论
  * 包含装卦、四象占法、用神取用等专业功能
+ * 
+ * 核心原理：
+ * 1. 装卦系统：主卦、变卦、互卦组合成九宫格
+ * 2. 天盘地盘：天盘为上卦（外部环境），地盘为后天八卦（固定不变）
+ * 3. 四象占法：阴阳得配失配、向心离心判断吉凶生克
+ * 4. 用神取用：乾为父、坤为母、艮为子女、兑为婚姻等
+ * 
  * 严格遵循ArkTS规范：无索引签名、无解构、使用Map
  */
 
-import { BaGua, ZhongGua } from './XiaoChengTuData';
+import { BaGua, ZhongGua, LIU_SHI_SI_GUA_DATA, BA_GUA_DATA } from './XiaoChengTuData';
 
 // ============= 接口定义 =============
 
-// 装卦结果 - 四盘数据
+// 主卦、变卦、互卦
+export interface GuaPair {
+  shangGua: string;  // 上卦
+  xiaGua: string;    // 下卦
+  zhongGua: string;  // 重卦名称
+}
+
+// 装卦结果 - 完整的小成图九宫格
 export interface ZhuangGuaResult {
-  tianPan: Map<string, string>;  // 天盘：九宫位置 -> 卦名
-  diPan: Map<string, string>;    // 地盘：九宫位置 -> 卦名
-  renPan: Map<string, string>;   // 人盘：九宫位置 -> 卦名
-  shenPan: Map<string, string>;  // 神盘：九宫位置 -> 卦名
+  // 主卦信息
+  zhuGua: GuaPair;
+  // 变卦信息
+  bianGua: GuaPair;
+  // 主卦互卦
+  zhuHuGua: GuaPair;
+  // 变卦互卦
+  bianHuGua: GuaPair;
+  // 中宫
+  zhongGong: string;
+  // 天盘九宫（上卦所落位置）
+  tianPan: Map<string, string>;  
+  // 地盘九宫（后天八卦固定）
+  diPan: Map<string, string>;    
+  // 动爻
+  dongYao: number;
 }
 
 // 九宫位置枚举
@@ -29,12 +56,22 @@ export enum JiuGongPosition {
   ZHONG = '中'
 }
 
-// 四象类型
+// 四象类型（阴阳得配失配 + 向心离心）
 export enum SiXiangType {
-  JI = '吉',
-  XIONG = '凶',
-  SHENG = '生',
-  KE = '克'
+  JI = '吉',           // 吉象
+  XIONG = '凶',        // 凶象
+  SHENG = '生',        // 相生
+  KE = '克',           // 相克
+  XIAN_XIONG_HOU_JI = '先凶后吉',  // 先凶后吉
+  XIAN_JI_HOU_XIONG = '先吉后凶'   // 先吉后凶
+}
+
+// 四象方向类型
+export enum SiXiangDirection {
+  XIANG_XIN = '向心',    // 上降下升
+  LI_XIN = '离心',       // 上升下降
+  WAI_YIN = '外引',      // 上升下升
+  NEI_YIN = '内引'       // 上降下降
 }
 
 // 四象占法结果
@@ -51,9 +88,14 @@ export interface SiXiangResult {
 
 // 用神位置
 export interface YongShenPosition {
-  宫位: string;
-  落宫: string;
-  四象: SiXiangType;
+  名称: string;        // 用神名称
+  宫位: string;        // 用神所在宫位
+  天盘卦: string;      // 天盘落的卦
+  地盘卦: string;      // 地盘的卦
+  四象: SiXiangType;   // 四象吉凶
+  方向: SiXiangDirection;  // 向心离心
+  五行关系: string;    // 五行生克关系
+  分析: string;        // 详细分析
 }
 
 // 专业预测结果
@@ -67,52 +109,105 @@ export interface ProfessionalResult {
 // ============= 装卦核心类 =============
 
 export class XiaoChengTuProfessional {
-  // 八卦顺序映射（用于装卦排列）
-  private baGuaOrder: Map<string, number>;
+  // 八卦五行映射
+  private baGuaWuxing: Map<string, string>;
   
-  // 九宫位置顺序
-  private jiuGongOrder: string[];
+  // 八卦阴阳属性
+  private baGuaYinYang: Map<string, string>;
+  
+  // 后天八卦方位（地盘固定）
+  private houTianBaGua: Map<string, string>;
+  
+  // 八卦先天数
+  private xianTianShu: Map<string, number>;
 
   constructor() {
-    // 初始化八卦顺序
-    this.baGuaOrder = new Map();
-    this.baGuaOrder.set('乾', 0);
-    this.baGuaOrder.set('兑', 1);
-    this.baGuaOrder.set('离', 2);
-    this.baGuaOrder.set('震', 3);
-    this.baGuaOrder.set('巽', 4);
-    this.baGuaOrder.set('坎', 5);
-    this.baGuaOrder.set('艮', 6);
-    this.baGuaOrder.set('坤', 7);
+    // 初始化八卦五行
+    this.baGuaWuxing = new Map();
+    this.baGuaWuxing.set('乾', '金');
+    this.baGuaWuxing.set('兑', '金');
+    this.baGuaWuxing.set('离', '火');
+    this.baGuaWuxing.set('震', '木');
+    this.baGuaWuxing.set('巽', '木');
+    this.baGuaWuxing.set('坎', '水');
+    this.baGuaWuxing.set('艮', '土');
+    this.baGuaWuxing.set('坤', '土');
 
-    // 九宫顺序
-    this.jiuGongOrder = ['乾', '坤', '震', '巽', '坎', '离', '艮', '兑'];
+    // 初始化八卦阴阳属性
+    this.baGuaYinYang = new Map();
+    this.baGuaYinYang.set('乾', '阳');
+    this.baGuaYinYang.set('震', '阳');
+    this.baGuaYinYang.set('坎', '阳');
+    this.baGuaYinYang.set('艮', '阳');
+    this.baGuaYinYang.set('坤', '阴');
+    this.baGuaYinYang.set('巽', '阴');
+    this.baGuaYinYang.set('离', '阴');
+    this.baGuaYinYang.set('兑', '阴');
+
+    // 初始化后天八卦方位（地盘）
+    this.houTianBaGua = new Map();
+    this.houTianBaGua.set('乾', '乾');  // 西北
+    this.houTianBaGua.set('坤', '坤');  // 西南
+    this.houTianBaGua.set('震', '震');  // 正东
+    this.houTianBaGua.set('巽', '巽');  // 东南
+    this.houTianBaGua.set('坎', '坎');  // 正北
+    this.houTianBaGua.set('离', '离');  // 正南
+    this.houTianBaGua.set('艮', '艮');  // 东北
+    this.houTianBaGua.set('兑', '兑');  // 正西
+    
+    // 先天八卦数
+    this.xianTianShu = new Map();
+    this.xianTianShu.set('乾', 1);
+    this.xianTianShu.set('兑', 2);
+    this.xianTianShu.set('离', 3);
+    this.xianTianShu.set('震', 4);
+    this.xianTianShu.set('巽', 5);
+    this.xianTianShu.set('坎', 6);
+    this.xianTianShu.set('艮', 7);
+    this.xianTianShu.set('坤', 8);
   }
 
   /**
-   * 执行装卦 - 生成四盘数据
+   * 执行装卦 - 生成完整的小成图九宫格
+   * 根据苏国圣老师的理论：
+   * 1. 主卦、变卦、互卦组合成九宫
+   * 2. 天盘为上卦（动态），地盘为后天八卦（固定）
+   * 3. 中宫根据特定规则确定
    */
-  performZhuangGua(shangGua: BaGua, xiaGua: BaGua): ZhuangGuaResult {
-    const result: ZhuangGuaResult = {
-      tianPan: new Map(),
-      diPan: new Map(),
-      renPan: new Map(),
-      shenPan: new Map()
+  performZhuangGua(zhongGua: ZhongGua, dongYao: number): ZhuangGuaResult {
+    // 1. 获取主卦信息
+    const zhuGua: GuaPair = {
+      shangGua: zhongGua.上卦,
+      xiaGua: zhongGua.下卦,
+      zhongGua: zhongGua.名称
     };
 
-    // 1. 生成天盘（上卦）
-    this.fillTianPan(result.tianPan, shangGua);
+    // 2. 计算变卦（动爻变化）
+    const bianGua = this.calculateBianGua(zhongGua, dongYao);
 
-    // 2. 生成地盘（下卦）
-    this.fillDiPan(result.diPan, xiaGua);
+    // 3. 计算互卦
+    const zhuHuGua = this.calculateHuGua(zhongGua);
+    const bianHuGua = this.calculateHuGua(bianGua);
 
-    // 3. 生成人盘（天地合）
-    this.fillRenPan(result.renPan, result.tianPan, result.diPan);
+    // 4. 计算中宫
+    const zhongGong = this.calculateZhongGong(zhuGua, bianGua);
 
-    // 4. 生成神盘（归藏卦）
-    this.fillShenPan(result.shenPan, result.renPan);
+    // 5. 装天盘（九宫格）
+    const tianPan = this.fillTianPan(zhuGua, bianGua, zhuHuGua, bianHuGua);
 
-    return result;
+    // 6. 装地盘（后天八卦固定）
+    const diPan = this.fillDiPan();
+
+    return {
+      zhuGua,
+      bianGua,
+      zhuHuGua,
+      bianHuGua,
+      zhongGong,
+      tianPan,
+      diPan,
+      dongYao
+    };
   }
 
   /**

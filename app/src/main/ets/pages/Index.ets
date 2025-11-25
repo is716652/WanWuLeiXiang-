@@ -175,10 +175,10 @@ struct Index {
             )
 
             this.createNavButton(
-              '小成图起卦',
-              '八卦重合  天人合一  象数解析',
+              '小成图专业版',
+              '九宫装卦  四象占法  用神取用',
               '#FF6B35',
-              'pages/XiaoChengTuPage'
+              'pages/XiaoChengTuProPage'
             )
           }
           .opacity(this.buttonsOpacity)
