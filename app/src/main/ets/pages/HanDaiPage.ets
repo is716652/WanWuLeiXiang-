@@ -136,7 +136,15 @@ struct HanDaiPage {
               'pages/XianTianBaGuaPage'
             )
 
-            // 第三行：焦氏易林起卦
+            // 第三行：纳甲起卦
+            this.createNavButton(
+              '纳甲起卦',
+              '六爻专业占卦  纳甲装卦世应六亲',
+              '#00695C',
+              'pages/NaJiaQiGuaPage'
+            )
+
+            // 第四行：焦氏易林起卦
             this.createNavButton(
               '焦氏易林起卦',
               '六爻同时生成法  本卦之卦占验',
@@ -144,7 +152,7 @@ struct HanDaiPage {
               'pages/QiGuaPage'
             )
 
-            // 第四行：京房八宫卦
+            // 第五行：京房八宫卦
             this.createNavButton(
               '京房八宫卦',
               '世应易学  六爻占卜基础',
@@ -152,7 +160,7 @@ struct HanDaiPage {
               'pages/JingFangPage'
             )
 
-            // 第五行：京房重卦法表格
+            // 第六行：京房重卦法表格
             this.createNavButton(
               '京房重卦法表格',
               '卦变规律  阴阳消长',
@@ -160,7 +168,7 @@ struct HanDaiPage {
               'pages/JingFangTablePage'
             )
 
-            // 第六行：纳甲配置表
+            // 第七行：纳甲配置表
             this.createNavButton(
               '纳甲配置表',
               '六爻基础  天干地支配卦',
@@ -168,7 +176,7 @@ struct HanDaiPage {
               'pages/NaJiaPage'
             )
 
-            // 第七行：卦气值日
+            // 第八行：卦气值日
             this.createNavButton(
               '卦气值日',
               '六日七分  冬至起始六十卦轮值',
@@ -176,7 +184,7 @@ struct HanDaiPage {
               'pages/GuaQiPage'
             )
 
-            // 第八行：焦氏易林查询
+            // 第九行：焦氏易林查询
             this.createNavButton(
               '焦氏易林查询',
               '浏览查询  已收录45卦易林内容',
@@ -207,6 +215,12 @@ struct HanDaiPage {
               .textAlign(TextAlign.Start)
               .width('100%')
 
+            Text('• 纳甲起卦：专业六爻占卜，纳甲装卦世应六亲六神')
+              .fontSize(12)
+              .fontColor('#666666')
+              .textAlign(TextAlign.Start)
+              .width('100%')
+            
             Text('• 焦氏易林起卦：六爻同时生成法，本卦之卦占验')
               .fontSize(12)
               .fontColor('#666666')
