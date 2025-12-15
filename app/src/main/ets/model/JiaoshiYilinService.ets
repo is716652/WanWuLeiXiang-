@@ -98,7 +98,10 @@ const guaNameToFile: Record<string, string> = {
   '升': 'sheng',
   '困': 'kun_difficulty',
   '井': 'jing',
-  '革': 'ge'
+  '革': 'ge',
+  // 新增：旅、巽（56-57）
+  '旅': 'lv_travel',
+  '巽': 'xun'
 };
 
 /**
