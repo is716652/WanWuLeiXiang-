@@ -101,7 +101,15 @@ const guaNameToFile: Record<string, string> = {
   '革': 'ge',
   // 新增：旅、巽（56-57）
   '旅': 'lv_travel',
-  '巽': 'xun'
+  '巽': 'xun',
+  // 新增：兑、涣、节、中孚、小过、既济、未济（58-64）
+  '兑': 'dui',
+  '涣': 'huan',
+  '节': 'jie_regulate',
+  '中孚': 'zhongfu',
+  '小过': 'xiaoguo',
+  '既济': 'jiji',
+  '未济': 'weiji'
 };
 
 /**

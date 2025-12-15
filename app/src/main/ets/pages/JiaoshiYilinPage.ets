@@ -43,9 +43,9 @@ interface JiaoshiYilinData {
 @Entry
 @Component
 struct JiaoshiYilinPage {
-  // 修正为标准六十四卦顺序（1..57），确保卡片序号与卦名一致
-  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi', 'tongren', 'dayou', 'qian_modesty', 'yu', 'sui', 'gu', 'lin', 'guan', 'shihe', 'ben', 'bo', 'fu', 'wuwang', 'daxu', 'yi', 'daguo', 'kan', 'li', 'xian', 'heng', 'dun', 'dazhuang', 'jin', 'mingyi', 'jiaren', 'kui', 'jian', 'jie', 'sun', 'yi_benefit', 'guai', 'gou', 'cui', 'sheng', 'kun_difficulty', 'jing', 'ge', 'ding', 'zhen', 'gen', 'jian_gradual', 'guimei', 'feng', 'lv_travel', 'xun'];
-  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否', '同人', '大有', '谦', '豫', '随', '蛊', '临', '观', '噬嗑', '贲', '剥', '复', '无妄', '大畜', '颐', '大过', '坎', '离', '咸', '恒', '遁', '大壮', '晋', '明夷', '家人', '睽', '蹇', '解', '损', '益', '夬', '姤', '萃', '升', '困', '井', '革', '鼎', '震', '艮', '渐', '归妹', '丰', '旅', '巽'];
+  // 标准六十四卦顺序（1-64），确保卡片序号与卦名一致
+  @State guaList: string[] = ['qian', 'kun', 'zhun', 'meng', 'xu', 'song', 'shi', 'bi', 'xiaoxu', 'lv', 'tai', 'pi', 'tongren', 'dayou', 'qian_modesty', 'yu', 'sui', 'gu', 'lin', 'guan', 'shihe', 'ben', 'bo', 'fu', 'wuwang', 'daxu', 'yi', 'daguo', 'kan', 'li', 'xian', 'heng', 'dun', 'dazhuang', 'jin', 'mingyi', 'jiaren', 'kui', 'jian', 'jie', 'sun', 'yi_benefit', 'guai', 'gou', 'cui', 'sheng', 'kun_difficulty', 'jing', 'ge', 'ding', 'zhen', 'gen', 'jian_gradual', 'guimei', 'feng', 'lv_travel', 'xun', 'dui', 'huan', 'jie_regulate', 'zhongfu', 'xiaoguo', 'jiji', 'weiji'];
+  @State guaNames: string[] = ['乾', '坤', '屯', '蒙', '需', '讼', '师', '比', '小畜', '履', '泰', '否', '同人', '大有', '谦', '豫', '随', '蛊', '临', '观', '噬嗑', '贲', '剥', '复', '无妄', '大畜', '颐', '大过', '坎', '离', '咸', '恒', '遁', '大壮', '晋', '明夷', '家人', '睽', '蹇', '解', '损', '益', '夬', '姤', '萃', '升', '困', '井', '革', '鼎', '震', '艮', '渐', '归妹', '丰', '旅', '巽', '兑', '涣', '节', '中孚', '小过', '既济', '未济'];
   @State selectedGuaIndex: number = 0;
   @State currentGuaData: JiaoshiYilinData | null = null;
   @State selectedZhiGuaIndex: number = -1;
@@ -113,11 +113,11 @@ struct JiaoshiYilinPage {
         })
       }
       .columnsTemplate('1fr 1fr 1fr 1fr 1fr 1fr')
-      .rowsTemplate('1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr')  // 10行，6列×10行=60个位置，足够显示55个卦
+      .rowsTemplate('1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr')  // 11行，6列×11行=66个位置，足够显示64卦
       .columnsGap(8)
       .rowsGap(8)
       .width('100%')
-      .height(600)  // 高度从540增加到60
+      .height(660)  // 高度调整为11行
     }
     .width('100%')
     .padding(16)
